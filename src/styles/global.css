@@ -1,0 +1,163 @@
+@import "./variables.css";
+@import "./dashboard.css";
+@import "./tables.css";
+@import "./forms.css";
+@import "./modal.css";
+@import "./responsive.css";
+@import "./animations.css";
+@import "../App.css";
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--primary-black);
+  
+  font-family: "Inter", sans-serif;
+}
+
+a {
+  text-decoration: none;
+}
+
+button {
+  cursor: pointer;
+}
+
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+#root {
+  width: 100%;
+}
+
+.admin-layout {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+}
+
+.admin-main {
+  width: 100%;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-width: 320px;
+}
+
+img,
+svg {
+  max-width: 100%;
+}
+
+.form-label {
+  display: block;
+  color: #d4af37;
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.form-input {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(212, 175, 55, 0.18);
+  border-radius: 10px;
+  padding: 12px 14px;
+  color: #f5f5f5;
+  font-size: 14px;
+  outline: none;
+  transition: 0.2s ease;
+  box-sizing: border-box;
+}
+
+.form-input:focus {
+  border-color: #d4af37;
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15);
+}
+
+.form-input::placeholder {
+  color: #8f8f8f;
+}
+
+.form-input option {
+  background: #1e1b18;
+  color: #f5f5f5;
+}
+
+.form-input select option {
+  background: #1e1b18;
+  color: #f5f5f5;
+}
+
+textarea.form-input {
+  resize: vertical;
+  min-height: 120px;
+  line-height: 1.5;
+}
+
+select.form-input {
+  cursor: pointer;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 14px;
+  margin-top: 24px;
+}
+
+.action-btn {
+  border: none;
+  border-radius: 12px;
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.action-btn.cancel {
+  background: rgba(255,255,255,0.08);
+  color: #f1f1f1;
+}
+
+.action-btn.cancel:hover {
+  background: rgba(255,255,255,0.14);
+}
+
+.action-btn.save {
+  background: linear-gradient(
+    135deg,
+    #d4af37,
+    #b8922f
+  );
+
+  color: #111;
+}
+
+.action-btn.save:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px rgba(212,175,55,0.25);
+}

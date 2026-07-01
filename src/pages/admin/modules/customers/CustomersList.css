@@ -1,0 +1,171 @@
+.filter-box {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.filter-box input,
+.filter-box select {
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+}
+
+.export-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.export-actions button {
+  padding: 10px 14px;
+  border: none;
+  border-radius: 8px;
+  background: #2563eb;
+  color: white;
+  cursor: pointer;
+}
+
+.customer-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  padding: 20px;
+}
+
+.customer-modal {
+  background: #0f172a;
+  width: 90%;
+  max-width: 950px;
+  max-height: 90vh;
+  overflow-y: auto;
+  border-radius: 14px;
+  padding: 24px;
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.customer-modal h3,
+.customer-modal h4 {
+  color: white;
+}
+
+.customer-modal p {
+  color: #cbd5e1;
+}
+
+.customer-modal strong {
+  color: white;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.modal-header button {
+  border: none;
+  background: #ef4444;
+  color: white;
+  padding: 8px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.modal-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.customer-modal .admin-table th {
+  color: white;
+  background: #111827;
+}
+
+.customer-modal .admin-table td {
+  color: #e5e7eb;
+}
+
+.customer-log-item {
+  background: rgba(255, 255, 255, 0.08);
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  color: white;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.customer-log-item button {
+  border: none;
+  background: #2563eb;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.customer-log-item button:hover {
+  background: #1d4ed8;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.pagination button {
+  padding: 10px 18px;
+  border: none;
+  background: #d4af37;
+  color: #000;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.pagination button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pagination span {
+  color: white;
+  font-weight: 700;
+}
+
+@media (max-width: 768px) {
+  .filter-box,
+  .export-actions {
+    flex-direction: column;
+  }
+
+  .modal-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.icon-btn.view {
+  background: linear-gradient(135deg, #06b6d4, #2563eb);
+  color: white;
+  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.35);
+}
+
+.icon-btn.view:hover {
+  background: linear-gradient(135deg, #0891b2, #1d4ed8);
+  transform: scale(1.08);
+}
+
+.icon-btn.view svg {
+  font-size: 18px;
+}
