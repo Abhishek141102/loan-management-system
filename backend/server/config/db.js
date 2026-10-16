@@ -12,10 +12,13 @@ const db = mysql.createConnection({
   ssl:
   process.env.DB_SSL === "true"
     ? {
-        ca: require("fs").readFileSync(
-          require("path").join(__dirname, "ca.pem"),
-          "utf8"
-        ),
+        
+ca: require("fs").readFileSync(
+  process.env.DB_SSL_CA_PATH ||
+    require("path").join(__dirname, "ca.pem"),
+  "utf8"
+),
+
         rejectUnauthorized: true,
       }
     : undefined,
