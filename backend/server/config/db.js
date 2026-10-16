@@ -1,5 +1,4 @@
-const fs = require("fs");
-const path = require("path");
+
 const mysql = require("mysql2");
 require("dotenv").config();
 
@@ -9,12 +8,17 @@ const db = mysql.createConnection({
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
   port: Number(process.env.DB_PORT) || 3306,
-  ssl: process.env.DB_SSL === "true"
-  ? {
-      ca: fs.readFileSync(path.join(__dirname, "ca.pem"), "utf8"),
-      rejectUnauthorized: true,
-    }
-  : undefined,
+
+  ssl:
+  process.env.DB_SSL === "true"
+    ? {
+        ca: require("fs").readFileSync(
+          require("path").join(__dirname, "ca.pem"),
+          "utf8"
+        ),
+        rejectUnauthorized: true,
+      }
+    : undefined,
 });
 
 db.connect((err) => {
