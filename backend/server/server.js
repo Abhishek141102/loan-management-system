@@ -3,7 +3,7 @@ const express = require("express");
 const cors = require("cors");
 
 const db = require("./config/db");
-const settingsRoutes = require("./routes/settingsRoutes");
+const settingsRoutes = require("./routes/Settingsroutes");
 const enquiryRoutes = require("./routes/enquiryRoutes");
 const applicationRoutes = require("./routes/applicationRoutes");
 const documentRoutes = require("./routes/documentRoutes");

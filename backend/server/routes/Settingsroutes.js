@@ -7,7 +7,7 @@ const {
   getEmailTemplates,
   saveEmailTemplate,
   resetEmailTemplates,
-} = require("../controllers/settingsController");
+} = require("../controllers/Settingscontroller");
 
 const router = express.Router();
 

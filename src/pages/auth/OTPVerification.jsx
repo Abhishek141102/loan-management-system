@@ -46,7 +46,7 @@ function OTPVerification() {
     try {
 
     await axios.post(
-      "http://localhost:5000/api/auth/verify-otp",
+      `${import.meta.env.VITE_API_URL || "http://localhost:5000/api"}/auth/verify-otp`,
       {
         email,
         otp: finalOtp,
@@ -71,7 +71,7 @@ function OTPVerification() {
   try {
 
     await axios.post(
-      "http://localhost:5000/api/auth/resend-otp",
+      `${import.meta.env.VITE_API_URL || "http://localhost:5000/api"}/auth/resend-otp`,
       { email }
     );
 

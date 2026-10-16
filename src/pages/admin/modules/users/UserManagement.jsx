@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useAuth } from "../../../../context/AuthContext";
 
-const API = "http://localhost:5000/api";
+const API = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 const ROLES = ["superadmin", "admin", "manager", "qa"];
 
 // Role ke liye module permissions define (SQL se match karta hai)

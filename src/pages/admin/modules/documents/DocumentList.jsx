@@ -668,7 +668,11 @@ function DocumentList() {
       return;
     }
     const link = document.createElement("a");
-    link.href = `http://localhost:5000/api/documents/${doc.id}/download`;
+    
+const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+
+link.href = `${API_BASE}/documents/${doc.id}/download`;
+
     link.download = doc.fileName || `${doc.document}.${doc.fileType}`;
     document.body.appendChild(link);
     link.click();

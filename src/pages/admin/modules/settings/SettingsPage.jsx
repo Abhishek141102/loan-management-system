@@ -4,7 +4,9 @@ import { useNavigate } from "react-router-dom";
 import API from "../../../../services/api";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
-const API_BASE = "http://localhost:5000/api/settings";
+
+const API_BASE = `${import.meta.env.VITE_API_URL || "http://localhost:5000/api"}/settings`;
+
 
 function SettingsPage() {
   const navigate = useNavigate();
@@ -121,7 +123,9 @@ function SettingsPage() {
   const handlePasswordChange = async () => {
     try {
       const response = await fetch(
-        "http://localhost:5000/api/auth/change-password",
+        
+`${import.meta.env.VITE_API_URL || "http://localhost:5000/api"}/auth/change-password`,
+
         {
           method: "POST",
 
