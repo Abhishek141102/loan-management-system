@@ -1,3 +1,5 @@
+const fs = require("fs");
+const path = require("path");
 const mysql = require("mysql2");
 require("dotenv").config();
 
@@ -6,19 +8,21 @@ const db = mysql.createConnection({
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
+  port: Number(process.env.DB_PORT) || 3306,
+  ssl: process.env.DB_SSL === "true"
+  ? {
+      ca: fs.readFileSync(path.join(__dirname, "ca.pem"), "utf8"),
+      rejectUnauthorized: true,
+    }
+  : undefined,
 });
 
 db.connect((err) => {
   if (err) {
-    console.log("Database Connection Failed", err);
+    console.error("Database Connection Failed:", err.message);
   } else {
     console.log("MySQL Connected Successfully");
   }
 });
-
-console.log(
-  "CONNECTED DB:",
-  process.env.DB_NAME
-);
 
 module.exports = db;

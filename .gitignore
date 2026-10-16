@@ -23,3 +23,5 @@ dist-ssr
 *.sln
 *.sw?
 backend/server/.env
+backend/server/config/ca.pem
+ca.pem
