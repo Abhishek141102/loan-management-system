@@ -12,8 +12,15 @@ const loginAdmin = async (req, res) => {
     if (err) return res.status(500).json(err);
     if (result.length === 0) return res.status(401).json({ message: "Invalid credentials or account inactive." });
     const admin = result[0];
-    const isMatch = await bcrypt.compare(password, admin.password);
-    if (!isMatch) return res.status(401).json({ message: "Invalid credentials." });
+    
+const isMatch = await bcrypt.compare(password, admin.password);
+
+console.log("Login password comparison result:", isMatch);
+
+if (!isMatch) {
+  return res.status(401).json({ message: "Invalid credentials." });
+}
+
     const token = jwt.sign(
       { id: admin.id, email: admin.email, role: admin.role, name: admin.name },
       process.env.JWT_SECRET,
