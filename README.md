@@ -1,24 +1,26 @@
 # 💰 I Loan — Loan Management System
 
-A full-stack Loan Management System built with **React + Vite** (frontend) and **Node.js + Express + MySQL** (backend). It supports role-based access control (RBAC), customer management, loan applications, approval workflows, document uploads, enquiry tracking, reports, and email notifications.
+A full-stack Loan Management System built using **React 19 + Vite** for the frontend and **Node.js + Express + MySQL** for the backend. The application provides admin authentication, role-based permissions, loan management workflows, customer records, enquiry tracking, and password-reset emails.
 
 ## ✨ Features
 
-- 🔐 JWT-based Authentication (Login, Register, OTP, Forgot/Reset Password)
-- 👥 Role-Based Access Control (Admin, User roles)
-- 📋 Loan Application Management
-- ✅ Approval Queue & Workflow
-- 👤 Customer Management & Profiles
-- 📁 Document Upload & Management
-- 📩 Enquiry Tracking & Lead Assignment
-- 📊 Reports & Analytics (PDF + Excel export)
-- ⚙️ Settings (SMTP, Email Templates, Notifications)
-- 📦 User & Permission Management
+- 🔐 **Authentication** — JWT-based login and password hashing
+- 🔑 **Forgot/Reset Password** — Email-based password reset using Resend
+- 👥 **Role-Based Access Control (RBAC)** — Role and permission management
+- 📋 **Loan Application Management**
+- ✅ **Approval Queue & Workflow**
+- 👤 **Customer Management & Profiles**
+- 📁 **Document Upload & Management**
+- 📩 **Enquiry Tracking & Lead Assignment**
+- 📊 **Reports & Analytics** — PDF and Excel exports
+- ⚙️ **Settings & Notifications**
+- 📦 **User & Permission Management**
 
 ## 🛠️ Tech Stack
 
 ### Frontend
-- React 19 + Vite
+- React 19
+- Vite
 - React Router DOM
 - Axios
 - Chart.js + react-chartjs-2
@@ -28,10 +30,21 @@ A full-stack Loan Management System built with **React + Vite** (frontend) and *
 - React Icons
 
 ### Backend
-- Node.js + Express
+- Node.js
+- Express.js
 - MySQL2
 - JWT (Authentication)
-- Bcryptjs (Password Hashing)
+- bcryptjs (Password Hashing)
 - Multer (File Uploads)
-- Nodemailer (Email)
-- Dotenv
+- Resend API (Transactional Email)
+- dotenv (Environment Configuration)
+
+### Database
+- MySQL 8.4
+- Aiven Cloud MySQL
+
+## ☁️ Deployment
+
+- **Frontend:** Vercel
+- **Backend API:** Render
+- **Cloud Database:** Aiven MySQL
