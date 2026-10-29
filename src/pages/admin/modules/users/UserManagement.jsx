@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useAuth } from "../../../../context/AuthContext";
+import "./UserManagement.css";
 
 const API = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 const ROLES = ["superadmin", "admin", "manager", "qa"];
@@ -66,10 +67,10 @@ const MODULE_LABELS = {
 };
 
 const ROLE_COLORS = {
-  superadmin: { bg: "#7c3aed", light: "#f5f3ff", border: "#ddd6fe" },
-  admin:      { bg: "#2563eb", light: "#eff6ff", border: "#bfdbfe" },
-  manager:    { bg: "#059669", light: "#ecfdf5", border: "#a7f3d0" },
-  qa:         { bg: "#d97706", light: "#fffbeb", border: "#fde68a" },
+  superadmin: { bg: "#7c3aed", light: "rgba(212,175,55,0.07)", border: "rgba(212,175,55,0.24)" },
+  admin:      { bg: "#2563eb", light: "rgba(212,175,55,0.07)", border: "rgba(212,175,55,0.24)" },
+  manager:    { bg: "#059669", light: "rgba(212,175,55,0.07)", border: "rgba(212,175,55,0.24)" },
+  qa:         { bg: "#d97706", light: "rgba(212,175,55,0.07)", border: "rgba(212,175,55,0.24)" },
 };
 
 export default function UserManagement() {
@@ -93,7 +94,7 @@ export default function UserManagement() {
       const res = await axios.get(`${API}/users`, { headers });
       setUsers(res.data);
     } catch (e) {
-      setMsg({ text: "Users load karne mein error.", type: "error" });
+      setMsg({ text: "Failed to load users.", type: "error" });
     } finally {
       setLoading(false);
     }
@@ -117,29 +118,29 @@ export default function UserManagement() {
     try {
       if (editUser) {
         await axios.put(`${API}/users/${editUser.id}`, form, { headers });
-        // Agar current logged-in user ka role change hua, toh permissions refresh karo
+        // Refresh permissions when the current user's role changes.
         if (editUser.id === currentUser?.id || editUser.email === currentUser?.email) {
           await fetchPermissions(token);
-          setMsg({ text: "✅ Aapka role update ho gaya! Permissions refresh ho gayi.", type: "success" });
+          setMsg({ text: "Your role has been updated and your permissions have been refreshed.", type: "success" });
         } else {
-          setMsg({ text: `✅ "${editUser.name}" ka role '${form.role}' ho gaya! Unhe re-login karna hoga nayi permissions ke liye.`, type: "success" });
+          setMsg({ text: `The role for "${editUser.name}" has been updated to '${form.role}'. They must sign in again for the new permissions to take effect.`, type: "success" });
         }
       } else {
         await axios.post(`${API}/users`, form, { headers });
-        setMsg({ text: `✅ User create ho gaya! Role: ${form.role}`, type: "success" });
+        setMsg({ text: `User created successfully. Role: ${form.role}`, type: "success" });
       }
       setShowModal(false);
       loadUsers();
     } catch (e) {
-      setMsg({ text: e.response?.data?.message || "Error aaya.", type: "error" });
+      setMsg({ text: e.response?.data?.message || "An error occurred.", type: "error" });
     }
   };
 
   const handleDelete = async (id, name) => {
-    if (!window.confirm(`"${name}" ko delete karein?`)) return;
+    if (!window.confirm(`Delete "${name}"?`)) return;
     try {
       await axios.delete(`${API}/users/${id}`, { headers });
-      setMsg({ text: "User delete ho gaya.", type: "success" });
+      setMsg({ text: "User deleted successfully.", type: "success" });
       loadUsers();
     } catch (e) {
       setMsg({ text: e.response?.data?.message || "Delete failed.", type: "error" });
@@ -180,16 +181,16 @@ export default function UserManagement() {
   };
 
   return (
-    <div style={{ padding: "24px" }}>
+    <div className="user-management-page" style={{ padding: "24px" }}>
       {/* Header */}
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
+      <div className="user-management-heading" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
         <div>
           <h1 style={{ margin: 0, fontSize: "22px", fontWeight: "700" }}>👥 User Management</h1>
           <p style={{ margin: "4px 0 0", color: "#666", fontSize: "14px" }}>
             Manage system users — assign roles • Click on role badge to view permissions
           </p>
         </div>
-        <button onClick={openAdd} style={{ background: "#2563eb", color: "#fff", border: "none", padding: "10px 20px", borderRadius: "8px", cursor: "pointer", fontWeight: "600" }}>
+        <button className="user-primary-btn" onClick={openAdd} style={{ background: "#2563eb", color: "#fff", border: "none", padding: "10px 20px", borderRadius: "8px", cursor: "pointer", fontWeight: "600" }}>
           + New User
         </button>
       </div>
@@ -200,7 +201,7 @@ export default function UserManagement() {
           const c = ROLE_COLORS[role];
           const accessible = getAccessibleModules(role);
           return (
-            <div key={role} onClick={() => openPermView(role)}
+            <div className="user-role-summary" key={role} onClick={() => openPermView(role)}
               style={{ background: c.light, border: `1px solid ${c.border}`, borderRadius: "10px", padding: "14px", cursor: "pointer", transition: "transform .15s" }}
               onMouseEnter={e => e.currentTarget.style.transform = "translateY(-2px)"}
               onMouseLeave={e => e.currentTarget.style.transform = ""}
@@ -224,7 +225,7 @@ export default function UserManagement() {
 
       {/* Alert message */}
       {msg.text && (
-        <div style={{
+        <div className={`user-management-alert ${msg.type}`} style={{
           padding: "12px 16px", borderRadius: "8px", marginBottom: "16px",
           background: msg.type === "success" ? "#d1fae5" : "#fee2e2",
           color: msg.type === "success" ? "#065f46" : "#991b1b",
@@ -238,9 +239,9 @@ export default function UserManagement() {
       {/* Users Table */}
       {loading ? <p>Loading users...</p> : (
         <div style={{ overflowX: "auto" }}>
-          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "14px" }}>
+          <table className="user-management-table" style={{ width: "100%", borderCollapse: "collapse", fontSize: "14px" }}>
             <thead>
-              <tr style={{ background: "#f8fafc" }}>
+              <tr className="user-table-heading" style={{ background: "#f8fafc" }}>
                 {["#", "Name", "Email", "Role & Access", "Status", "Created", "Actions"].map(h => (
                   <th key={h} style={{ padding: "12px 16px", textAlign: "left", fontWeight: "600", color: "#374151", borderBottom: "2px solid #e5e7eb" }}>{h}</th>
                 ))}
@@ -251,11 +252,11 @@ export default function UserManagement() {
                 const accessible = getAccessibleModules(u.role);
                 const isSelf = u.email === currentUser?.email;
                 return (
-                  <tr key={u.id} style={{ borderBottom: "1px solid #f3f4f6", background: isSelf ? "#fffbeb" : "white" }}>
+                  <tr className={isSelf ? "current-user-row" : ""} key={u.id} style={{ borderBottom: "1px solid #f3f4f6", background: isSelf ? "#fffbeb" : "white" }}>
                     <td style={{ padding: "12px 16px", color: "#9ca3af" }}>{i + 1}</td>
                     <td style={{ padding: "12px 16px", fontWeight: "500" }}>
                       {u.name}
-                      {isSelf && <span style={{ marginLeft: "6px", fontSize: "10px", background: "#fef3c7", color: "#92400e", padding: "1px 6px", borderRadius: "8px", fontWeight: "600" }}>YOU</span>}
+                      {isSelf && <span className="user-self-badge" style={{ marginLeft: "6px", fontSize: "10px", background: "#fef3c7", color: "#92400e", padding: "1px 6px", borderRadius: "8px", fontWeight: "600" }}>YOU</span>}
                     </td>
                     <td style={{ padding: "12px 16px", color: "#6b7280" }}>{u.email}</td>
                     <td style={{ padding: "12px 16px" }}>
@@ -272,8 +273,8 @@ export default function UserManagement() {
                     </td>
                     <td style={{ padding: "12px 16px", color: "#9ca3af", fontSize: "12px" }}>{new Date(u.created_at).toLocaleDateString("en-IN")}</td>
                     <td style={{ padding: "12px 16px" }}>
-                      <button onClick={() => openEdit(u)} style={{ background: "#eff6ff", color: "#2563eb", border: "1px solid #bfdbfe", padding: "5px 12px", borderRadius: "6px", cursor: "pointer", marginRight: "8px", fontSize: "13px" }}>Edit</button>
-                      <button onClick={() => handleDelete(u.id, u.name)} style={{ background: "#fef2f2", color: "#dc2626", border: "1px solid #fecaca", padding: "5px 12px", borderRadius: "6px", cursor: "pointer", fontSize: "13px" }}>Delete</button>
+                      <button className="user-edit-btn" onClick={() => openEdit(u)} style={{ background: "#eff6ff", color: "#2563eb", border: "1px solid #bfdbfe", padding: "5px 12px", borderRadius: "6px", cursor: "pointer", marginRight: "8px", fontSize: "13px" }}>Edit</button>
+                      <button className="user-delete-btn" onClick={() => handleDelete(u.id, u.name)} style={{ background: "#fef2f2", color: "#dc2626", border: "1px solid #fecaca", padding: "5px 12px", borderRadius: "6px", cursor: "pointer", fontSize: "13px" }}>Delete</button>
                     </td>
                   </tr>
                 );
@@ -285,8 +286,8 @@ export default function UserManagement() {
 
       {/* ===== PERMISSIONS VIEW MODAL ===== */}
       {showPermModal && permViewRole && (
-        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.6)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000 }}>
-          <div style={{ background: "#fff", borderRadius: "14px", padding: "28px", width: "640px", maxWidth: "95vw", maxHeight: "85vh", overflow: "auto", boxShadow: "0 24px 80px rgba(0,0,0,0.25)" }}>
+        <div className="user-modal-overlay" style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.6)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000 }}>
+          <div className="user-modal permissions-modal" style={{ background: "#fff", borderRadius: "14px", padding: "28px", width: "640px", maxWidth: "95vw", maxHeight: "85vh", overflow: "auto", boxShadow: "0 24px 80px rgba(0,0,0,0.25)" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
               <div>
                 <h2 style={{ margin: 0, fontSize: "18px" }}>
@@ -298,9 +299,9 @@ export default function UserManagement() {
             </div>
 
             <div style={{ overflowX: "auto" }}>
-              <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "13px" }}>
+              <table className="permissions-table" style={{ width: "100%", borderCollapse: "collapse", fontSize: "13px" }}>
                 <thead>
-                  <tr style={{ background: "#f8fafc" }}>
+                  <tr className="user-table-heading" style={{ background: "#f8fafc" }}>
                     <th style={{ padding: "10px 14px", textAlign: "left", fontWeight: "600", color: "#374151", borderBottom: "2px solid #e5e7eb" }}>Module</th>
                     {["View", "Create", "Edit", "Delete"].map(a => (
                       <th key={a} style={{ padding: "10px 14px", textAlign: "center", fontWeight: "600", color: "#374151", borderBottom: "2px solid #e5e7eb" }}>{a}</th>
@@ -309,7 +310,7 @@ export default function UserManagement() {
                 </thead>
                 <tbody>
                   {Object.entries(ROLE_PERMISSIONS[permViewRole] || {}).map(([mod, p]) => (
-                    <tr key={mod} style={{ borderBottom: "1px solid #f3f4f6", background: p.view ? "white" : "#fafafa", opacity: p.view ? 1 : 0.5 }}>
+                    <tr className={p.view ? "permission-enabled-row" : "permission-disabled-row"} key={mod} style={{ borderBottom: "1px solid #f3f4f6", background: p.view ? "white" : "#fafafa", opacity: p.view ? 1 : 0.5 }}>
                       <td style={{ padding: "10px 14px", fontWeight: p.view ? "500" : "400", color: p.view ? "#1f2937" : "#9ca3af" }}>
                         {MODULE_LABELS[mod]}
                       </td>
@@ -327,7 +328,7 @@ export default function UserManagement() {
               </table>
             </div>
 
-            <div style={{ marginTop: "16px", padding: "10px 14px", background: "#f0fdf4", borderRadius: "8px", fontSize: "12px", color: "#065f46" }}>
+            <div className="permission-note" style={{ marginTop: "16px", padding: "10px 14px", background: "#f0fdf4", borderRadius: "8px", fontSize: "12px", color: "#065f46" }}>
               💡 To change these permissions, update in <strong>Role Management</strong> or the <strong>backend role_permissions table.</strong>
             </div>
           </div>
@@ -336,8 +337,8 @@ export default function UserManagement() {
 
       {/* ===== ADD / EDIT USER MODAL ===== */}
       {showModal && (
-        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 999 }}>
-          <div style={{ background: "#fff", borderRadius: "12px", padding: "28px", width: "520px", maxWidth: "95vw", maxHeight: "90vh", overflow: "auto", boxShadow: "0 20px 60px rgba(0,0,0,0.2)" }}>
+        <div className="user-modal-overlay" style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 999 }}>
+          <div className="user-modal user-form-modal" style={{ background: "#fff", borderRadius: "12px", padding: "28px", width: "520px", maxWidth: "95vw", maxHeight: "90vh", overflow: "auto", boxShadow: "0 20px 60px rgba(0,0,0,0.2)" }}>
             <h2 style={{ margin: "0 0 20px", fontSize: "18px" }}>{editUser ? "✏️ Edit User" : "➕ New User"}</h2>
 
             {/* Name, Email, Password fields */}
@@ -347,21 +348,21 @@ export default function UserManagement() {
               { label: editUser ? "New Password" : "Password", key: "password", type: "password" }
             ].map(({ label, key, type }) => (
               <div key={key} style={{ marginBottom: "16px" }}>
-                <label style={{ display: "block", fontSize: "13px", fontWeight: "600", color: "#374151", marginBottom: "6px" }}>{label}</label>
+                <label className="user-form-label" style={{ display: "block", fontSize: "13px", fontWeight: "600", color: "#374151", marginBottom: "6px" }}>{label}</label>
                 <input type={type} value={form[key]} onChange={(e) => setForm({ ...form, [key]: e.target.value })}
-                  style={{ width: "100%", padding: "10px 12px", border: "1px solid #d1d5db", borderRadius: "8px", fontSize: "14px", boxSizing: "border-box" }} />
+                  className="user-form-input" style={{ width: "100%", padding: "10px 12px", border: "1px solid #d1d5db", borderRadius: "8px", fontSize: "14px", boxSizing: "border-box" }} />
               </div>
             ))}
 
             {/* Role selector */}
             <div style={{ marginBottom: "16px" }}>
-              <label style={{ display: "block", fontSize: "13px", fontWeight: "600", color: "#374151", marginBottom: "6px" }}>Role</label>
+              <label className="user-form-label" style={{ display: "block", fontSize: "13px", fontWeight: "600", color: "#374151", marginBottom: "6px" }}>Role</label>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "8px", marginBottom: "12px" }}>
                 {ROLES.map(r => {
                   const c = ROLE_COLORS[r];
                   const selected = form.role === r;
                   return (
-                    <div key={r} onClick={() => { setForm({ ...form, role: r }); setPreviewRole(r); }}
+                    <div className={`user-role-option ${selected ? "selected" : ""}`} key={r} onClick={() => { setForm({ ...form, role: r }); setPreviewRole(r); }}
                       style={{
                         border: `2px solid ${selected ? c.bg : c.border}`,
                         background: selected ? c.light : "#fff",
@@ -385,13 +386,13 @@ export default function UserManagement() {
 
             {/* Permission preview for selected role */}
             {previewRole && (
-              <div style={{ marginBottom: "16px", background: "#f8fafc", borderRadius: "10px", padding: "14px", border: "1px solid #e5e7eb" }}>
+              <div className="permission-preview" style={{ marginBottom: "16px", background: "#f8fafc", borderRadius: "10px", padding: "14px", border: "1px solid #e5e7eb" }}>
                 <div style={{ fontSize: "12px", fontWeight: "600", color: "#374151", marginBottom: "8px", textTransform: "uppercase", letterSpacing: "0.5px" }}>
                   📋 {previewRole} — Accessible Modules
                 </div>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
                   {Object.entries(ROLE_PERMISSIONS[previewRole] || {}).map(([mod, p]) => (
-                    <div key={mod} style={{
+                    <div className={`permission-chip ${p.view ? "enabled" : "disabled"}`} key={mod} style={{
                       padding: "4px 10px", borderRadius: "20px", fontSize: "11px", fontWeight: "500",
                       background: p.view ? "#dcfce7" : "#f3f4f6",
                       color: p.view ? "#166534" : "#9ca3af",
@@ -407,8 +408,8 @@ export default function UserManagement() {
                   ))}
                 </div>
                 {editUser && form.role !== editUser.role && (
-                  <div style={{ marginTop: "10px", padding: "8px 10px", background: "#fef3c7", borderRadius: "6px", fontSize: "11px", color: "#92400e" }}>
-                    ⚠️ Role change hone ke baad user ko <strong>re-login</strong> karna hoga nayi permissions activate hone ke liye.
+                  <div className="role-change-note" style={{ marginTop: "10px", padding: "8px 10px", background: "#fef3c7", borderRadius: "6px", fontSize: "11px", color: "#92400e" }}>
+                    ⚠️ After a role change, the user must <strong>sign in again</strong> for the new permissions to take effect.
                   </div>
                 )}
               </div>
@@ -417,17 +418,17 @@ export default function UserManagement() {
             {/* Status (edit only) */}
             {editUser && (
               <div style={{ marginBottom: "20px" }}>
-                <label style={{ display: "block", fontSize: "13px", fontWeight: "600", color: "#374151", marginBottom: "6px" }}>Status</label>
+                <label className="user-form-label" style={{ display: "block", fontSize: "13px", fontWeight: "600", color: "#374151", marginBottom: "6px" }}>Status</label>
                 <select value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value })}
-                  style={{ width: "100%", padding: "10px 12px", border: "1px solid #d1d5db", borderRadius: "8px", fontSize: "14px", boxSizing: "border-box" }}>
+                  className="user-form-input" style={{ width: "100%", padding: "10px 12px", border: "1px solid #d1d5db", borderRadius: "8px", fontSize: "14px", boxSizing: "border-box" }}>
                   <option>Active</option><option>Inactive</option>
                 </select>
               </div>
             )}
 
             <div style={{ display: "flex", gap: "12px", justifyContent: "flex-end" }}>
-              <button onClick={() => setShowModal(false)} style={{ padding: "10px 20px", border: "1px solid #d1d5db", borderRadius: "8px", cursor: "pointer", background: "#fff" }}>Cancel</button>
-              <button onClick={handleSave} style={{ padding: "10px 20px", background: "#2563eb", color: "#fff", border: "none", borderRadius: "8px", cursor: "pointer", fontWeight: "600" }}>
+              <button className="user-cancel-btn" onClick={() => setShowModal(false)} style={{ padding: "10px 20px", border: "1px solid #d1d5db", borderRadius: "8px", cursor: "pointer", background: "#fff" }}>Cancel</button>
+              <button className="user-primary-btn" onClick={handleSave} style={{ padding: "10px 20px", background: "#2563eb", color: "#fff", border: "none", borderRadius: "8px", cursor: "pointer", fontWeight: "600" }}>
                 {editUser ? "Update" : "Create"}
               </button>
             </div>

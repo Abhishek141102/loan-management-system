@@ -1,3 +1,4 @@
+import { cloneElement } from "react";
 import { Navigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
@@ -9,7 +10,7 @@ const ProtectedRoute = ({ children }) => {
 };
 
 // Module-level access check
-export const ModuleRoute = ({ module, children }) => {
+export const ModuleRoute = ({ module, children, globalSearch }) => {
   const { user, canView, loadingPermissions } = useAuth();
   if (!user?.isAuthenticated) return <Navigate to="/auth/login" replace />;
   if (loadingPermissions) {
@@ -25,13 +26,13 @@ export const ModuleRoute = ({ module, children }) => {
         <div style={{ fontSize:"60px" }}>🚫</div>
         <h2 style={{ color:"#e53e3e", margin:0 }}>Access Denied</h2>
         <p style={{ color:"#666", textAlign:"center" }}>
-          Aapke role <strong>({user.role})</strong> ko is module ka access nahi hai.<br/>
-          Superadmin se contact karein.
+          Your role <strong>({user.role})</strong> does not have access to this module.<br/>
+          Please contact a superadmin.
         </p>
       </div>
     );
   }
-  return children;
+  return cloneElement(children, { globalSearch });
 };
 
 export default ProtectedRoute;

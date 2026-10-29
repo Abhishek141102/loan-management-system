@@ -42,7 +42,7 @@ const updateUser = (req, res) => {
 };
 
 const deleteUser = (req, res) => {
-  if (parseInt(req.params.id) === req.user.id) return res.status(400).json({ message: "Aap apna account delete nahi kar sakte." });
+  if (parseInt(req.params.id) === req.user.id) return res.status(400).json({ message: "You cannot delete your own account." });
   db.query("DELETE FROM admin_users WHERE id = ?", [req.params.id], (err, result) => {
     if (err) return res.status(500).json(err);
     if (result.affectedRows === 0) return res.status(404).json({ message: "User not found" });

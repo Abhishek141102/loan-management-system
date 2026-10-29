@@ -5,7 +5,6 @@ import API from "../../../../services/api.js";
 import { Link } from "react-router-dom";
 
 import {
-  FaEnvelope,
   FaEye,
   FaFileExport,
   FaPlus,
@@ -16,7 +15,7 @@ import "./EnquiriesList.css";
 
 import PaginationControls from "../../../../components/PaginationControls";
 
-function EnquiriesList() {
+function EnquiriesList({ globalSearch = "" }) {
 
   const [searchTerm,
     setSearchTerm] =
@@ -75,8 +74,8 @@ function EnquiriesList() {
       try {
 
         const res =
-          await API.get(
-            `/enquiries?page=${page}&limit=${limit}&search=${searchTerm}&loanType=${loanFilter}&status=${statusFilter}`
+        await API.get(
+            `/enquiries?page=${page}&limit=${limit}&search=${encodeURIComponent(globalSearch.trim() || searchTerm.trim())}&loanType=${encodeURIComponent(loanFilter)}&status=${encodeURIComponent(statusFilter)}`
           );
 
         setEnquiries(
@@ -108,7 +107,12 @@ function EnquiriesList() {
     searchTerm,
     loanFilter,
     statusFilter,
+    globalSearch,
   ]);
+
+  useEffect(() => {
+    setPage(1);
+  }, [globalSearch]);
 
   // HANDLE INPUT
   const handleChange =
@@ -278,7 +282,7 @@ function EnquiriesList() {
           </button>
 
           <button
-            className="secondary-btn"
+            className="primary-btn"
             onClick={
               handleExport
             }
@@ -584,9 +588,6 @@ function EnquiriesList() {
                         <FaEye />
                       </Link>
 
-                      <button className="icon-btn mail">
-                        <FaEnvelope />
-                      </button>
                     </td>
                   </tr>
                 )

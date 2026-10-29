@@ -287,8 +287,8 @@ function AdminUsers() {
               <div className="invite-info">
                 <FaEnvelope />
                 <p>
-                  New admin user ko invite email send hoga. Password setup link
-                  email me jayega.
+                  An invitation email will be sent to the new admin user with a
+                  link to set up their password.
                 </p>
               </div>
 

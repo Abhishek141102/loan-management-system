@@ -3213,7 +3213,26 @@ button.action-card {
   font-size: 18px;
 }
 
+.notification-dropdown-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.notification-dropdown-heading button {
+  color: #ffd700;
+  border: 0;
+  background: transparent;
+  font-size: 12px;
+}
+
 .notification-item {
+  display: block;
+  width: 100%;
+  border: 0;
+  color: inherit;
+  text-align: left;
   padding: 12px;
   border-radius: 12px;
   background: rgba(255, 255, 255, 0.04);
@@ -3235,6 +3254,12 @@ button.action-card {
 .notification-item small {
   color: #9ca3af;
   font-size: 12px;
+}
+
+.notification-empty {
+  color: #9ca3af;
+  font-size: 13px;
+  padding: 10px 4px;
 }
 
 .notification-btn span {

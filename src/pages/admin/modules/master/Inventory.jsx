@@ -190,8 +190,8 @@ function Inventory() {
       </div>
 
       <p className="inventory-note">
-        Tip: Manual Adjustment field me quantity type karo aur Enter press karo.
-        Example: `10` stock add karega, `-5` stock reduce karega.
+        Tip: Enter a quantity in the Manual Adjustment field and press Enter.
+        For example, `10` adds stock and `-5` reduces it.
       </p>
     </div>
   );

@@ -38,7 +38,7 @@ function Login() {
   };
 
   return (
-    <div className="auth-page">
+    <div className="auth-page login-page">
       <div className="auth-bg-glow"></div>
       <div className="auth-card">
         <div className="auth-brand">
@@ -61,7 +61,7 @@ function Login() {
             />
           </div>
 
-          <div className="auth-input-group password-field">
+          <div className="auth-input-group password-field login-password-field">
             <FaLock />
             <input
               type={showPassword ? "text" : "password"}

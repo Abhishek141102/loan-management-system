@@ -13,7 +13,7 @@ import {
   FaMoneyBillWave,
 } from "react-icons/fa";
 
-function ApprovalQueue() {
+function ApprovalQueue({ globalSearch = "" }) {
   const [approvals, setApprovals] = useState([]);
 
   const [selectedLoan, setSelectedLoan] = useState(null);
@@ -33,7 +33,9 @@ function ApprovalQueue() {
 
   const fetchApprovals = async () => {
     try {
-      const res = await API.get(`/approvals?page=${page}&limit=${limit}`);
+      const res = await API.get(
+        `/approvals?page=${page}&limit=${limit}&search=${encodeURIComponent(globalSearch.trim())}`,
+      );
 
       // SAFE RESPONSE
       const rows = res.data.data || res.data || [];
@@ -75,7 +77,11 @@ function ApprovalQueue() {
 
   useEffect(() => {
     fetchApprovals();
-  }, [page]);
+  }, [page, globalSearch]);
+
+  useEffect(() => {
+    setPage(1);
+  }, [globalSearch]);
 
   const addAudit = (message) => {
     const time = new Date().toLocaleString();

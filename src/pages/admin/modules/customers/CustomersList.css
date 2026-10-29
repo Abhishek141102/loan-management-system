@@ -1,14 +1,62 @@
 .filter-box {
   display: flex;
-  gap: 12px;
-  margin-bottom: 20px;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 24px;
 }
 
-.filter-box input,
+.customer-search-filter {
+  display: flex;
+  align-items: center;
+  flex: 2;
+  min-width: 240px;
+  gap: 10px;
+  height: 52px;
+  padding: 0 16px;
+  color: var(--gold);
+  background: var(--dark-card);
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+}
+
+.filter-box .customer-search-filter input,
+.filter-box .customer-search-filter input:focus {
+  width: 100%;
+  min-width: 0;
+  height: 100%;
+  padding: 0;
+  color: var(--white);
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  outline: 0;
+  box-shadow: none;
+}
+
 .filter-box select {
-  padding: 12px;
-  border-radius: 8px;
-  border: 1px solid #cbd5e1;
+  flex: 1;
+  min-width: 180px;
+  height: 52px;
+  padding: 0 18px;
+  color: var(--text-primary);
+  background: var(--dark-card);
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  outline: none;
+}
+
+.customer-filter-clear {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
+  color: #ef5350;
+  font-weight: 700;
+  background: rgba(244, 67, 54, 0.15);
+  border: 1px solid rgba(244, 67, 54, 0.3);
+  border-radius: 10px;
+  cursor: pointer;
 }
 
 .export-actions {
@@ -53,18 +101,22 @@
   color: white;
 }
 
-.customer-modal p {
-  color: #cbd5e1;
+.customer-modal h3 {
+  margin: 0;
 }
 
-.customer-modal strong {
-  color: white;
+.customer-modal h4 {
+  margin: 0 0 14px;
+  color: var(--gold);
+  font-size: 15px;
 }
 
 .modal-header {
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  margin-bottom: 20px;
+  gap: 16px;
+  margin-bottom: 24px;
 }
 
 .modal-header button {
@@ -78,8 +130,61 @@
 
 .modal-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.customer-profile-section {
+  min-width: 0;
+  padding: 18px;
+  background: rgba(17, 24, 39, 0.72);
+  border: 1px solid rgba(212, 175, 55, 0.16);
+  border-radius: 12px;
+}
+
+.customer-profile-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px 18px;
+}
+
+.customer-profile-field {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  gap: 4px;
+}
+
+.customer-profile-field span {
+  color: #a9b4c8;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.customer-profile-field strong {
+  color: #f1f5f9;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.customer-profile-section:first-child .customer-profile-field:last-child {
+  grid-column: 1 / -1;
+}
+
+.customer-loans-section {
+  min-width: 0;
+}
+
+.customer-loans-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid rgba(212, 175, 55, 0.14);
+  border-radius: 10px;
 }
 
 .customer-modal .admin-table th {
@@ -87,33 +192,13 @@
   background: #111827;
 }
 
+.customer-modal .admin-table {
+  min-width: 600px;
+  margin: 0;
+}
+
 .customer-modal .admin-table td {
   color: #e5e7eb;
-}
-
-.customer-log-item {
-  background: rgba(255, 255, 255, 0.08);
-  padding: 12px;
-  border-radius: 8px;
-  margin-bottom: 10px;
-  color: white;
-
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.customer-log-item button {
-  border: none;
-  background: #2563eb;
-  color: white;
-  padding: 6px 10px;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.customer-log-item button:hover {
-  background: #1d4ed8;
 }
 
 .pagination {
@@ -150,8 +235,37 @@
     flex-direction: column;
   }
 
+  .customer-search-filter,
+  .filter-box select,
+  .customer-filter-clear {
+    width: 100%;
+  }
+
   .modal-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .customer-modal-overlay {
+    padding: 12px;
+  }
+
+  .customer-modal {
+    width: 100%;
+    padding: 18px;
+  }
+
+  .customer-profile-section {
+    padding: 14px;
+  }
+
+  .customer-profile-fields {
+    grid-template-columns: 1fr;
+  }
+
+  .customer-profile-section:first-child .customer-profile-field:last-child {
+    grid-column: auto;
   }
 }
 

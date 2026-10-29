@@ -16,6 +16,7 @@ import * as XLSX from "xlsx";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import "./ReportsPage.css";
+import PaginationControls from "../../../../components/PaginationControls";
 
 ChartJS.register(
   CategoryScale,
@@ -31,10 +32,23 @@ ChartJS.register(
 
 
 const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+const REPORTS_PER_PAGE = 10;
 
+function buildReportParams(filters, page = 1, limit = REPORTS_PER_PAGE) {
+  const params = new URLSearchParams({ page: String(page), limit: String(limit) });
+  if (filters.loanType !== "All") params.append("loan_type", filters.loanType);
+  if (filters.status !== "All") params.append("status", filters.status);
+  if (filters.fromDate) params.append("from_date", filters.fromDate);
+  if (filters.toDate) params.append("to_date", filters.toDate);
+  if (filters.search.trim()) params.append("search", filters.search.trim());
+  return params;
+}
 
 function ReportsPage() {
   const [reportRows, setReportRows] = useState([]);
+  const [totalRecords, setTotalRecords] = useState(0);
+  const [page, setPage] = useState(1);
+  const [reportLoading, setReportLoading] = useState(true);
   const [summary, setSummary] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -50,20 +64,45 @@ function ReportsPage() {
   // Fetch table data from backend with filters
   const fetchReportData = async () => {
     try {
-      const params = new URLSearchParams();
-      if (filters.loanType !== "All")
-        params.append("loan_type", filters.loanType);
-      if (filters.status !== "All") params.append("status", filters.status);
-      if (filters.fromDate) params.append("from_date", filters.fromDate);
-      if (filters.toDate) params.append("to_date", filters.toDate);
-      if (filters.search) params.append("search", filters.search);
-
+      setReportLoading(true);
+      const params = buildReportParams(filters, page);
       const res = await fetch(`${API_BASE}/reports?${params.toString()}`);
+      if (!res.ok) throw new Error("Could not fetch report data");
       const data = await res.json();
-      setReportRows(data);
+      setReportRows(data.data || []);
+      setTotalRecords(data.pagination?.total || 0);
     } catch (err) {
       console.error("Failed to fetch report data:", err);
+      setReportRows([]);
+      setTotalRecords(0);
+    } finally {
+      setReportLoading(false);
     }
+  };
+
+  const fetchAllReportRows = async () => {
+    const exportPageSize = 250;
+    const params = buildReportParams(filters, 1, exportPageSize);
+    const res = await fetch(`${API_BASE}/reports?${params.toString()}`);
+    if (!res.ok) throw new Error("Could not fetch report data for export");
+    const data = await res.json();
+    const rows = data.data || [];
+    const totalPages = data.pagination?.totalPages || 1;
+
+    if (totalPages > 1) {
+      const remainingPages = await Promise.all(
+        Array.from({ length: totalPages - 1 }, (_, index) => {
+          const pageParams = buildReportParams(filters, index + 2, exportPageSize);
+          return fetch(`${API_BASE}/reports?${pageParams.toString()}`).then((pageRes) => {
+            if (!pageRes.ok) throw new Error("Could not fetch all report rows for export");
+            return pageRes.json();
+          });
+        }),
+      );
+      remainingPages.forEach((pageData) => rows.push(...(pageData.data || [])));
+    }
+
+    return rows;
   };
 
   // Fetch chart summary once on mount
@@ -85,13 +124,15 @@ function ReportsPage() {
 
   useEffect(() => {
     fetchReportData();
-  }, [filters]);
+  }, [filters, page]);
 
   const handleFilterChange = (e) => {
+    setPage(1);
     setFilters({ ...filters, [e.target.name]: e.target.value });
   };
 
   const resetFilters = () => {
+    setPage(1);
     setFilters({
       search: "",
       reportType: "All Reports",
@@ -289,15 +330,17 @@ function ReportsPage() {
 
   // ─── EXPORTS ──────────────────────────────────────────────────────────────
 
-  const exportExcel = () => {
-    const worksheet = XLSX.utils.json_to_sheet(reportRows);
+  const exportExcel = async () => {
+    const rows = await fetchAllReportRows();
+    const worksheet = XLSX.utils.json_to_sheet(rows);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Loan Reports");
     XLSX.writeFile(workbook, "loan-reports.xlsx");
   };
 
-  const exportCSV = () => {
-    const worksheet = XLSX.utils.json_to_sheet(reportRows);
+  const exportCSV = async () => {
+    const rows = await fetchAllReportRows();
+    const worksheet = XLSX.utils.json_to_sheet(rows);
     const csv = XLSX.utils.sheet_to_csv(worksheet);
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
@@ -308,13 +351,14 @@ function ReportsPage() {
     URL.revokeObjectURL(url);
   };
 
-  const exportPDF = () => {
+  const exportPDF = async () => {
+    const rows = await fetchAllReportRows();
     const doc = new jsPDF();
     doc.text("I Loan Management System - Reports", 14, 15);
     autoTable(doc, {
       startY: 25,
       head: [["Loan ID", "Name", "Loan Type", "Amount", "Status", "Date"]],
-      body: reportRows.map((row) => [
+      body: rows.map((row) => [
         row.loan_id,
         row.name,
         row.loan_type,
@@ -514,7 +558,7 @@ function ReportsPage() {
       <div className="report-table-card">
         <div className="table-title-row">
           <h3>Report Preview</h3>
-          <span>{reportRows.length} Records Found</span>
+          <span>{totalRecords} Records Found</span>
         </div>
 
         <div className="table-responsive">
@@ -530,7 +574,11 @@ function ReportsPage() {
               </tr>
             </thead>
             <tbody>
-              {reportRows.length > 0 ? (
+              {reportLoading ? (
+                <tr>
+                  <td colSpan="6" className="empty-data">Loading report records...</td>
+                </tr>
+              ) : reportRows.length > 0 ? (
                 reportRows.map((row, index) => (
                   <tr key={`${row.loan_id}-${index}`}>
                     <td>{row.loan_id}</td>
@@ -544,7 +592,7 @@ function ReportsPage() {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="7" className="empty-data">
+                  <td colSpan="6" className="empty-data">
                     No report data found.
                   </td>
                 </tr>
@@ -552,6 +600,13 @@ function ReportsPage() {
             </tbody>
           </table>
         </div>
+        <PaginationControls
+          page={page}
+          totalPages={Math.max(1, Math.ceil(totalRecords / REPORTS_PER_PAGE))}
+          totalRecords={totalRecords}
+          limit={REPORTS_PER_PAGE}
+          onPageChange={setPage}
+        />
       </div>
     </div>
   );

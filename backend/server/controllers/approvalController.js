@@ -90,7 +90,7 @@ const approveLoan = (req, res) => {
 
   // Step 0 — Already approved check
   db.query(
-    `SELECT id FROM loan_approval_actions WHERE application_id = ? AND action = 'Approved' LIMIT 1`,
+    `SELECT id FROM loan_approval_actions WHERE application_id = ? AND action = 'Approve' LIMIT 1`,
     [application_id],
     (err, existingResult) => {
       if (err) { console.log(err); return res.status(500).json(err); }
@@ -120,7 +120,7 @@ const approveLoan = (req, res) => {
         db.query(
           `INSERT INTO loan_approval_actions (application_id, cibil_score, income_emi_ratio, action, remarks, rejection_reason, action_by, action_at)
            VALUES (?, ?, ?, ?, ?, ?, ?, NOW())`,
-          [Number(application_id), calculatedCibil, calculatedRatio, "Approved", remarks || "Loan Approved", "", "1"],
+          [Number(application_id), calculatedCibil, calculatedRatio, "Approve", remarks || "Loan Approved", "", "1"],
           (err) => {
             if (err) { console.log("APPROVE ERROR:", err); return res.status(500).json(err); }
 

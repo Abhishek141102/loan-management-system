@@ -3,8 +3,51 @@ const db = require("../config/db");
 // GET REPORT DATA (with filters)
 const getReportData = (req, res) => {
   const { loan_type, status, from_date, to_date, search } = req.query;
+  const page = Math.max(1, parseInt(req.query.page, 10) || 1);
+  const limit = Math.max(1, parseInt(req.query.limit, 10) || 10);
+  const offset = (page - 1) * limit;
 
-  let sql = `
+  const baseSql = `
+    FROM loan_applications la
+    LEFT JOIN loan_approval_actions lap
+      ON la.id = lap.application_id
+  `;
+  const conditions = [];
+  const values = [];
+
+  if (loan_type && loan_type !== "All") {
+    conditions.push("la.loan_type = ?");
+    values.push(loan_type);
+  }
+
+  if (status && status !== "All") {
+    conditions.push("IFNULL(lap.action, la.status) = ?");
+    values.push(status);
+  }
+
+  if (from_date) {
+    conditions.push("la.application_date >= ?");
+    values.push(from_date);
+  }
+
+  if (to_date) {
+    conditions.push("la.application_date < DATE_ADD(?, INTERVAL 1 DAY)");
+    values.push(to_date);
+  }
+
+  if (search) {
+    conditions.push(`(
+      la.loan_code LIKE ? OR
+      la.applicant_name LIKE ? OR
+      la.loan_type LIKE ? OR
+      IFNULL(lap.action, la.status) LIKE ?
+    )`);
+    const value = `%${search}%`;
+    values.push(value, value, value, value);
+  }
+
+  const whereSql = conditions.length ? `WHERE ${conditions.join(" AND ")}` : "";
+  const sql = `
     SELECT
       la.id,
       la.loan_code AS loan_id,
@@ -14,53 +57,36 @@ const getReportData = (req, res) => {
       IFNULL(lap.action, la.status) AS status,
       DATE_FORMAT(la.application_date, '%Y-%m-%d') AS date,
       IFNULL(lap.remarks, '-') AS remarks
-    FROM loan_applications la
-    LEFT JOIN loan_approval_actions lap
-      ON la.id = lap.application_id
-    WHERE 1=1
+    ${baseSql}
+    ${whereSql}
+    ORDER BY la.application_date DESC, la.id DESC
+    LIMIT ? OFFSET ?
   `;
+  const countSql = `SELECT COUNT(*) AS total ${baseSql} ${whereSql}`;
 
-  const values = [];
-
-  if (loan_type && loan_type !== "All") {
-    sql += " AND la.loan_type = ?";
-    values.push(loan_type);
-  }
-
-  if (status && status !== "All") {
-    sql += " AND IFNULL(lap.action, la.status) = ?";
-    values.push(status);
-  }
-
-  if (from_date) {
-    sql += " AND la.application_date >= ?";
-    values.push(from_date);
-  }
-
-  if (to_date) {
-    sql += " AND la.application_date <= ?";
-    values.push(to_date);
-  }
-
-  if (search) {
-    sql += ` AND (
-      la.loan_code LIKE ? OR
-      la.applicant_name LIKE ? OR
-      la.loan_type LIKE ? OR
-      IFNULL(lap.action, la.status) LIKE ?
-    )`;
-    const s = `%${search}%`;
-    values.push(s, s, s, s);
-  }
-
-  sql += " ORDER BY la.application_date DESC";
-
-  db.query(sql, values, (err, result) => {
+  db.query(sql, [...values, limit, offset], (err, result) => {
     if (err) {
       console.log("REPORT ERROR:", err);
       return res.status(500).json(err);
     }
-    res.status(200).json(result);
+
+    db.query(countSql, values, (countErr, countResult) => {
+      if (countErr) {
+        console.log("REPORT COUNT ERROR:", countErr);
+        return res.status(500).json(countErr);
+      }
+
+      const total = countResult[0].total;
+      res.status(200).json({
+        data: result,
+        pagination: {
+          total,
+          page,
+          limit,
+          totalPages: Math.ceil(total / limit),
+        },
+      });
+    });
   });
 };
 

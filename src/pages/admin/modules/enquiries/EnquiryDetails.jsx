@@ -1,4 +1,4 @@
-import { FaExchangeAlt, FaFileSignature, FaEnvelope } from "react-icons/fa";
+import { FaExchangeAlt, FaFileSignature } from "react-icons/fa";
 
 import { useEffect, useState } from "react";
 
@@ -59,19 +59,6 @@ function EnquiryDetails() {
     console.log(err);
   }
 };
-const handleSendEmail = async () => {
-  try {
-    await API.post(`/enquiries/${id}/send-email`);
-
-    alert("Follow-up email sent successfully");
-  } catch (err) {
-    console.log(err);
-    alert("Email sending failed");
-  }
-};
-
-
-
   return (
     <div className="page-container">
       {/* HEADER */}
@@ -162,10 +149,6 @@ const handleSendEmail = async () => {
             Convert to Application
           </button>
 
-          <button className="action-btn" onClick={handleSendEmail}>
-  <FaEnvelope />
-  Send Follow-up Email
-</button>
         </div>
       </div>
     </div>

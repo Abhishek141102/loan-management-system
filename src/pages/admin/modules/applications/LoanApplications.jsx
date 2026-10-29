@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import {
   FaEdit,
-  FaEnvelope,
   FaEye,
   FaPlus,
   FaTimes,
@@ -22,6 +21,31 @@ const STATUS_COLORS = {
   Rejected: { bg: "rgba(244,67,54,0.18)", color: "#ef5350" },
   Disbursed: { bg: "rgba(156,39,176,0.18)", color: "#ce93d8" },
 };
+
+const applicationDateFormatter = new Intl.DateTimeFormat("en-IN", {
+  day: "2-digit",
+  month: "short",
+  year: "numeric",
+  hour: "2-digit",
+  minute: "2-digit",
+  hour12: true,
+  timeZone: "Asia/Kolkata",
+});
+
+function formatApplicationDate(value) {
+  if (!value) return "—";
+
+  // Database datetime strings without an offset are stored as UTC by the API.
+  const normalizedValue =
+    typeof value === "string" &&
+    /^\d{4}-\d{2}-\d{2}(?:[ T]\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?)?$/.test(value)
+      ? `${value.replace(" ", "T")}Z`
+      : value;
+  const date = new Date(normalizedValue);
+
+  if (Number.isNaN(date.getTime())) return String(value);
+  return `${applicationDateFormatter.format(date)} IST`;
+}
 
 function StatusBadge({ status }) {
   const s = STATUS_COLORS[status] || {
@@ -150,6 +174,9 @@ function FieldGroup({ label, value }) {
         style={{
           color: "var(--text-primary)",
           fontSize: 14,
+          lineHeight: 1.5,
+          whiteSpace: "pre-wrap",
+          overflowWrap: "anywhere",
         }}
       >
         {value || "—"}
@@ -206,7 +233,9 @@ function ViewModal({ app, onClose }) {
 
         <div style={{ marginTop: 14 }}>
           <FieldGroup label="Address" value={app.address} />
-          <FieldGroup label="Purpose" value={app.purpose} />
+          <div style={{ marginTop: 12 }}>
+            <FieldGroup label="Purpose" value={app.purpose} />
+          </div>
         </div>
 
         <div className="modal-actions">
@@ -776,116 +805,8 @@ function AddModal({ onClose, onAdd }) {
   );
 }
 
-function EmailModal({ app, onClose, onSend }) {
-  const [subject, setSubject] = useState(`Loan Application Status - ${app.id}`);
-
-  const [message, setMessage] = useState(
-    `Dear ${app.applicant},
-
-Your loan application status is currently "${app.status}".
-
-Loan ID: ${app.id}
-Loan Type: ${app.loanType}
-Amount: ${app.amount}
-
-Thank you,
-I-Loan Team`,
-  );
-
-  return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div
-        className="product-modal-large"
-        style={{
-          width: 680,
-        }}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginBottom: 24,
-          }}
-        >
-          <h3
-            style={{
-              color: "var(--gold)",
-              margin: 0,
-            }}
-          >
-            Send Status Email
-          </h3>
-
-          <button
-            onClick={onClose}
-            style={{
-              background: "none",
-              border: "none",
-              color: "#aaa",
-              cursor: "pointer",
-              fontSize: 18,
-            }}
-          >
-            <FaTimes />
-          </button>
-        </div>
-
-        <div style={{ marginBottom: 18 }}>
-          <label className="form-label">Subject</label>
-
-          <input
-            className="form-input"
-            value={subject}
-            onChange={(e) => setSubject(e.target.value)}
-            placeholder="Subject"
-          />
-        </div>
-
-        <div>
-          <label className="form-label">Email Message</label>
-
-          <textarea
-            className="form-input"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            style={{
-              minHeight: 240,
-              resize: "vertical",
-            }}
-          />
-        </div>
-
-        <div
-          className="modal-actions"
-          style={{
-            marginTop: 24,
-          }}
-        >
-          <button className="action-btn cancel" onClick={onClose}>
-            Cancel
-          </button>
-
-          <button
-            className="action-btn save"
-            onClick={() =>
-              onSend({
-                subject,
-                message,
-              })
-            }
-          >
-            Send Email
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 /* KEEPING ALL YOUR ORIGINAL MODALS SAME */
-/* EditModal, AddModal, EmailModal SAME AS YOUR ORIGINAL CODE */
+/* EditModal and AddModal stay available for application management. */
 
 /* ---------- MAIN COMPONENT ---------- */
 
@@ -943,21 +864,13 @@ function LoanApplications({ globalSearch }) {
     }
   };
 
-  const handleSendMail = ({ subject, message }) => {
-    console.log("MAIL:", subject, message);
-
-    showToast("Status email sent successfully");
-
-    setModal(null);
-  };
-
   // FETCH APPLICATIONS
   const fetchApplications = async () => {
     try {
       const q = (globalSearch || search || "").toString().trim();
 
       const res = await API.get(
-        `/applications?page=${page}&limit=${limit}&search=${q}&status=${filterStatus}&loanType=${filterType}`,
+        `/applications?page=${page}&limit=${limit}&search=${encodeURIComponent(q)}&status=${encodeURIComponent(filterStatus)}&loanType=${encodeURIComponent(filterType)}`,
       );
 
       const rows = res.data.data || res.data || [];
@@ -977,7 +890,7 @@ function LoanApplications({ globalSearch }) {
         tenure: item.tenure_months,
         purpose: item.purpose,
         coApplicant: item.co_applicant_details,
-        applicationDate: item.application_date,
+        applicationDate: formatApplicationDate(item.application_date),
         status: item.status,
         timeline: item.timeline || [],
       }));
@@ -995,6 +908,10 @@ function LoanApplications({ globalSearch }) {
   useEffect(() => {
     fetchApplications();
   }, [page, search, filterStatus, filterType, globalSearch]);
+
+  useEffect(() => {
+    setPage(1);
+  }, [globalSearch]);
 
   return (
     <div className="page-container">
@@ -1243,21 +1160,6 @@ function LoanApplications({ globalSearch }) {
                       <FaHistory />
                     </button>
 
-                    <button
-                      className="icon-btn"
-                      style={{
-                        background: "rgba(33,150,243,0.7)",
-                      }}
-                      title="Send Status Email"
-                      onClick={() =>
-                        setModal({
-                          type: "email",
-                          app,
-                        })
-                      }
-                    >
-                      <FaEnvelope />
-                    </button>
                   </td>
                 </tr>
               ))
@@ -1357,14 +1259,6 @@ function LoanApplications({ globalSearch }) {
           app={modal.app}
           onClose={() => setModal(null)}
           onSave={handleSaveEdit}
-        />
-      )}
-
-      {modal?.type === "email" && (
-        <EmailModal
-          app={modal.app}
-          onClose={() => setModal(null)}
-          onSend={handleSendMail}
         />
       )}
 

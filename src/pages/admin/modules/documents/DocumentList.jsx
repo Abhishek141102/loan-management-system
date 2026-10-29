@@ -596,7 +596,7 @@ function ChecklistModal({ loanType, docs, onClose }) {
 }
 
 /* ─── Main Component ─────────────────────────────────────── */
-function DocumentList() {
+function DocumentList({ globalSearch = "" }) {
   const [docs, setDocs] = useState([]);
   const [statusCounts, setStatusCounts] = useState({});
   const [search, setSearch] = useState("");
@@ -618,13 +618,14 @@ function DocumentList() {
   // ─── Reset page on filter/search change ──────────────────
   useEffect(() => {
     setCurrentPage(1);
-  }, [search, filterType, filterStatus]);
+  }, [search, filterType, filterStatus, globalSearch]);
 
   // ─── Fetch documents from backend with pagination ─────────
   const fetchDocuments = async (page = currentPage) => {
   try {
     const params = new URLSearchParams({ page, limit: RECORDS_PER_PAGE });
-    if (search)       params.append("search", search);
+    const query = globalSearch.trim() || search.trim();
+    if (query)         params.append("search", query);
     if (filterType)   params.append("type", filterType);
     if (filterStatus) params.append("status", filterStatus);
 
@@ -659,7 +660,7 @@ function DocumentList() {
 };
   useEffect(() => {
     fetchDocuments(currentPage);
-  }, [currentPage, search, filterType, filterStatus]);
+  }, [currentPage, search, filterType, filterStatus, globalSearch]);
 
   // ─── Download ─────────────────────────────────────────────
   const handleDownload = (doc) => {

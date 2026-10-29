@@ -250,6 +250,38 @@
     flex-direction: column;
   }
 
+  .login-page {
+    min-height: 100vh;
+    min-height: 100svh;
+    padding: 20px 14px;
+    overflow-y: auto;
+  }
+
+  .login-page .auth-card {
+    padding: 24px 20px;
+  }
+
+  .login-page .auth-brand {
+    margin-bottom: 20px;
+  }
+
+  .login-page .auth-brand span {
+    letter-spacing: 3px;
+  }
+
+  .login-page .auth-row {
+    align-items: center;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 8px;
+  }
+
+  .login-page .auth-row a,
+  .login-page .auth-check {
+    white-space: nowrap;
+    font-size: 13px;
+  }
+
   .otp-inputs {
     gap: 8px;
   }
