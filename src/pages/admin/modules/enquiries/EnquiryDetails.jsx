@@ -80,7 +80,7 @@ function EnquiryDetails() {
       <div className="details-grid">
         {/* CUSTOMER INFO */}
 
-        <div className="details-card">
+        <div className="details-card enquiry-customer-info">
           <h3>Customer Information</h3>
 
           <div className="detail-item">
@@ -135,10 +135,10 @@ function EnquiryDetails() {
 
       {/* QUICK ACTIONS */}
 
-      <div className="quick-actions">
+      <div className="quick-actions enquiry-detail-quick-actions">
         <h3>Quick Actions</h3>
 
-        <div className="actions-grid">
+        <div className="actions-grid enquiry-detail-action-buttons">
           <button className="action-btn" onClick={() => updateStatus("In Progress")}>
             <FaExchangeAlt />
             Change Status

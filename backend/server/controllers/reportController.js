@@ -94,11 +94,12 @@ const getReportData = (req, res) => {
 const getReportSummary = (req, res) => {
   const monthlySQL = `
     SELECT
-      DATE_FORMAT(application_date, '%b') AS month,
+      DATE_FORMAT(application_date, '%b %Y') AS month,
       COUNT(*) AS total
     FROM loan_applications
-    WHERE application_date >= DATE_SUB(NOW(), INTERVAL 6 MONTH)
-    GROUP BY DATE_FORMAT(application_date, '%Y-%m'), DATE_FORMAT(application_date, '%b')
+    WHERE application_date >= DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 5 MONTH), '%Y-%m-01')
+      AND application_date < DATE_ADD(LAST_DAY(CURDATE()), INTERVAL 1 DAY)
+    GROUP BY DATE_FORMAT(application_date, '%Y-%m'), DATE_FORMAT(application_date, '%b %Y')
     ORDER BY DATE_FORMAT(application_date, '%Y-%m') ASC
   `;
 

@@ -2047,6 +2047,13 @@ body,
   box-shadow: 0 8px 22px rgba(201, 168, 76, 0.14);
 }
 
+.admin-profile-wrapper .admin-user:hover {
+  border-color: var(--gold);
+  background: rgba(212, 175, 55, 0.1);
+  transform: translateY(-2px);
+  box-shadow: none;
+}
+
 .admin-avatar-icon {
   color: var(--gold);
   font-size: 28px;

@@ -358,7 +358,7 @@ function EnquiriesList({ globalSearch = "" }) {
       </div>
 
       {/* FILTERS */}
-      <div className="filter-box">
+      <div className="filter-box enquiries-filter-box">
 
         <div className="search-box">
 
@@ -385,6 +385,7 @@ function EnquiriesList({ globalSearch = "" }) {
         </div>
 
         <select
+          className="enquiry-filter-select"
           value={
             loanFilter
           }
@@ -426,6 +427,7 @@ function EnquiriesList({ globalSearch = "" }) {
         </select>
 
         <select
+          className="enquiry-filter-select"
           value={
             statusFilter
           }
@@ -467,9 +469,59 @@ function EnquiriesList({ globalSearch = "" }) {
       </div>
 
       {/* TABLE */}
-      <div className="table-wrapper card">
+      <div className="table-wrapper card enquiries-table-wrapper">
 
-        <table className="admin-table">
+        <div className="enquiries-mobile-list" aria-label="Loan enquiry records">
+          {enquiries.length === 0 ? (
+            <p className="enquiries-mobile-empty">No enquiries found.</p>
+          ) : enquiries.map((item) => (
+            <article className="enquiries-mobile-card" key={`mobile-${item.id}`}>
+              <div className="enquiries-mobile-card-header">
+                <div className="enquiries-mobile-id">
+                  <span>Enquiry ID</span>
+                  <strong>{item.id}</strong>
+                </div>
+                <span
+                  className={`status-badge ${(item.status || "").toLowerCase().replaceAll(" ", "-")}`}
+                >
+                  {item.status || "Unknown"}
+                </span>
+              </div>
+
+              <div className="enquiries-mobile-contact">
+                <div className="enquiries-mobile-field">
+                  <span>Customer</span>
+                  <strong>{item.full_name || "—"}</strong>
+                </div>
+                <div className="enquiries-mobile-field">
+                  <span>Mobile</span>
+                  <strong>{item.mobile || "—"}</strong>
+                </div>
+              </div>
+
+              <div className="enquiries-mobile-details">
+                <div className="enquiries-mobile-field loan-type">
+                  <span>Loan Type</span>
+                  <strong>{item.loan_type || "—"}</strong>
+                </div>
+                <div className="enquiries-mobile-field">
+                  <span>Amount</span>
+                  <strong>{item.loan_amount || "—"}</strong>
+                </div>
+                <div className="enquiries-mobile-field">
+                  <span>City</span>
+                  <strong>{item.city || "—"}</strong>
+                </div>
+              </div>
+
+              <Link to={`/admin/enquiries/${item.id}`} className="enquiries-mobile-view">
+                <FaEye /> View Enquiry
+              </Link>
+            </article>
+          ))}
+        </div>
+
+        <table className="admin-table enquiries-table">
 
           <thead>
             <tr>
@@ -503,6 +555,7 @@ function EnquiriesList({ globalSearch = "" }) {
 
               <tr>
                 <td
+                  className="enquiries-empty-cell"
                   colSpan={8}
                   style={{
                     textAlign:
@@ -523,47 +576,48 @@ function EnquiriesList({ globalSearch = "" }) {
                 (item) => (
 
                   <tr
+                    className="enquiries-data-row"
                     key={
                       item.id
                     }
                   >
-                    <td>
+                    <td data-label="Enquiry ID">
                       {
                         item.id
                       }
                     </td>
 
-                    <td>
+                    <td data-label="Customer">
                       {
                         item.full_name
                       }
                     </td>
 
-                    <td>
+                    <td data-label="Mobile">
                       {
                         item.mobile
                       }
                     </td>
 
-                    <td>
+                    <td data-label="Loan Type">
                       {
                         item.loan_type
                       }
                     </td>
 
-                    <td>
+                    <td data-label="Amount">
                       {
                         item.loan_amount
                       }
                     </td>
 
-                    <td>
+                    <td data-label="City">
                       {
                         item.city
                       }
                     </td>
 
-                    <td>
+                    <td data-label="Status">
 
                       <span
                         className={`status-badge ${item.status
@@ -579,7 +633,7 @@ function EnquiriesList({ globalSearch = "" }) {
                       </span>
                     </td>
 
-                    <td className="action-cell">
+                    <td className="action-cell" data-label="Actions">
 
                       <Link
                         to={`/admin/enquiries/${item.id}`}

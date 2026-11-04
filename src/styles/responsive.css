@@ -426,3 +426,100 @@
     padding: 7px 11px;
   }
 }
+
+/* Admin dashboard mobile header, notifications and chart sizing */
+@media (max-width: 768px) {
+  .admin-header .menu-btn,
+  .admin-header .notification-btn,
+  .admin-header .logout-btn,
+  .admin-header .admin-profile-wrapper .admin-user {
+    width: 40px;
+    height: 40px;
+    min-height: 40px;
+    padding: 0;
+    border-radius: 10px;
+    justify-content: center;
+    gap: 0;
+    flex: 0 0 40px;
+  }
+
+  .admin-header .menu-btn {
+    font-size: 16px;
+  }
+
+  .admin-header .menu-btn > svg,
+  .admin-header .notification-btn > svg,
+  .admin-header .logout-btn > svg,
+  .admin-header .admin-profile-wrapper .admin-avatar-icon {
+    width: 17px;
+    height: 17px;
+    font-size: 17px;
+  }
+
+  .admin-header .admin-profile-wrapper .admin-chevron {
+    display: none;
+  }
+
+  .admin-header .header-actions {
+    gap: 8px;
+    flex-wrap: nowrap;
+  }
+
+  .notification-dropdown {
+    position: fixed;
+    top: 74px;
+    right: 12px;
+    left: auto;
+    width: min(360px, calc(100vw - 24px));
+    max-width: calc(100vw - 24px);
+    box-sizing: border-box;
+  }
+
+  .notification-dropdown-heading {
+    min-width: 0;
+  }
+
+  .notification-dropdown-heading h4 {
+    min-width: 0;
+    margin-bottom: 0;
+  }
+
+  .notification-dropdown-heading button {
+    flex: 0 0 auto;
+    padding: 8px 4px;
+  }
+
+  .charts-grid {
+    min-width: 0;
+    gap: 16px;
+    margin-top: 22px;
+  }
+
+  .chart-card.monthly-applications-card {
+    min-height: 0;
+    padding: 18px 16px 20px;
+  }
+
+  .monthly-applications-card h3 {
+    margin-bottom: 14px;
+    font-size: 18px;
+    line-height: 1.3;
+  }
+
+  .monthly-applications-plot {
+    position: relative;
+    width: 100%;
+    height: 290px;
+    min-width: 0;
+  }
+
+  .monthly-applications-plot canvas {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 400px) {
+  .monthly-applications-plot {
+    height: 270px;
+  }
+}
