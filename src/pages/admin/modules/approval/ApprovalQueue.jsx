@@ -67,9 +67,12 @@ function ApprovalQueue({ globalSearch = "" }) {
 
       setTotalRecords(res.data.pagination?.total || rows.length);
 
-      if (formatted.length > 0 && !selectedLoan) {
-        setSelectedLoan(formatted[0]);
-      }
+      setSelectedLoan((currentSelected) => {
+        if (!formatted.length) return null;
+        return formatted.find(
+          (item) => item.application_id === currentSelected?.application_id,
+        ) || formatted[0];
+      });
     } catch (err) {
       console.log(err);
     }
@@ -168,7 +171,7 @@ function ApprovalQueue({ globalSearch = "" }) {
   };
 
   return (
-    <div className="page-container">
+    <div className="page-container approval-queue-page">
       <div className="page-header">
         <div>
           <h2>Loan Approval Queue</h2>
@@ -177,8 +180,57 @@ function ApprovalQueue({ globalSearch = "" }) {
         </div>
       </div>
 
-      <div className="table-wrapper table card">
-        <table className="admin-table">
+      <div className="table-wrapper table card approval-queue-table-wrapper">
+        <div className="approval-mobile-cards">
+          {approvals.length === 0 ? (
+            <p className="approval-mobile-empty">No approvals found.</p>
+          ) : approvals.map((item, index) => (
+            <article
+              className={`approval-mobile-card${selectedLoan?.application_id === item.application_id ? " selected" : ""}`}
+              key={`mobile-${item.application_id}-${index}`}
+              tabIndex={0}
+              role="group"
+              aria-label={`Select loan ${item.loanId}`}
+              onClick={() => setSelectedLoan(item)}
+              onKeyDown={(event) => {
+                if (event.target !== event.currentTarget) return;
+                if (event.key === "Enter" || event.key === " ") {
+                  event.preventDefault();
+                  setSelectedLoan(item);
+                }
+              }}
+            >
+              <div className="approval-mobile-card-header">
+                <div><span>Loan ID</span><strong>{item.loanId || "—"}</strong></div>
+                <span className="approval-mobile-status">{item.status || "Ready"}</span>
+              </div>
+              <div className="approval-mobile-fields">
+                <div className="approval-mobile-applicant"><span>Applicant Name</span><strong>{item.applicant || "—"}</strong></div>
+                <div><span>Loan Type</span><strong>{item.loanType || "—"}</strong></div>
+                <div><span>Amount</span><strong>{item.amount ?? "—"}</strong></div>
+                <div><span>CIBIL Score</span><strong>{item.cibil ?? "—"}</strong></div>
+                <div><span>Income/EMI Ratio</span><strong>{item.ratio || "—"}</strong></div>
+                <div><span>Documents</span><strong>{item.docs || "—"}</strong></div>
+              </div>
+              <div className="approval-mobile-actions" aria-label={`Approval actions for ${item.loanId}`}>
+                <button className="icon-btn success" aria-label={`Approve ${item.loanId}`} title="Approve" onClick={() => handleApprove(item)}>
+                  <FaCheckCircle />
+                </button>
+                <button className="icon-btn danger" aria-label={`Reject ${item.loanId}`} title="Reject" onClick={() => handleReject(item)}>
+                  <FaTimesCircle />
+                </button>
+                <button className="icon-btn info" aria-label={`Request information for ${item.loanId}`} title="Request Info" onClick={() => handleRequestInfo(item)}>
+                  <FaInfoCircle />
+                </button>
+                <button className="icon-btn disbursed" aria-label={`Mark ${item.loanId} disbursed`} title="Mark Disbursed" onClick={() => handleDisbursed(item)}>
+                  <FaMoneyBillWave />
+                </button>
+              </div>
+            </article>
+          ))}
+        </div>
+
+        <table className="admin-table approval-desktop-table">
           <thead>
             <tr>
               <th>Loan ID</th>
@@ -269,11 +321,12 @@ function ApprovalQueue({ globalSearch = "" }) {
         totalRecords={totalRecords}
         limit={limit}
         onPageChange={setPage}
+        className="approval-queue-pagination"
       />
 
       {selectedLoan && (
         <>
-          <div className="split-view">
+          <div className="split-view approval-application-details">
             <div className="split-card">
               <h3>Application Details</h3>
 
@@ -303,7 +356,7 @@ function ApprovalQueue({ globalSearch = "" }) {
             </div>
           </div>
 
-          <div className="details-card">
+          <div className="details-card approval-internal-remarks">
             <h3>Internal Remarks</h3>
 
             <textarea
@@ -313,7 +366,7 @@ function ApprovalQueue({ globalSearch = "" }) {
             />
 
             <button className="save-remark-btn" onClick={handleSaveRemark}>
-              Save Remark
+              <FaCheckCircle className="save-remark-icon" /> Save Remark
             </button>
           </div>
 

@@ -402,4 +402,46 @@
     top: 16px;
     text-align: center;
   }
+
+  .settings-page .settings-header {
+    text-align: center;
+  }
+
+  .settings-page .settings-header h2,
+  .settings-page .settings-header p,
+  .settings-page .settings-card-header h3,
+  .settings-page .settings-card-header p {
+    text-align: center;
+  }
+
+  .settings-page .settings-card-header {
+    justify-content: center;
+  }
+
+  .settings-page .settings-card-header > div {
+    width: 100%;
+  }
+
+  .settings-page .settings-tabs {
+    justify-items: center;
+    gap: 10px;
+  }
+
+  .settings-page .settings-tabs button,
+  .settings-page .settings-actions button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 88%;
+    min-height: 46px;
+    margin: 0 auto;
+    padding: 10px 14px;
+    box-sizing: border-box;
+    text-align: center;
+  }
+
+  .settings-page .settings-actions {
+    align-items: center;
+    gap: 10px;
+  }
 }

@@ -283,3 +283,381 @@
 .icon-btn.view svg {
   font-size: 18px;
 }
+
+.customer-mobile-cards,
+.customer-linked-loan-cards {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .customer-records-page {
+    min-width: 0;
+    overflow-x: hidden;
+  }
+
+  .customer-records-page .export-actions {
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .customer-records-page .export-actions > button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    width: min(88%, 420px);
+    min-height: 46px;
+    padding: 10px 14px;
+    text-align: center;
+  }
+
+  .customer-records-page .customers-filter-box {
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .customer-records-page .customer-search-filter {
+    width: 100%;
+    min-width: 0;
+    height: 46px;
+    min-height: 46px;
+    box-sizing: border-box;
+    padding: 0 14px;
+    gap: 10px;
+  }
+
+  .customer-records-page .customer-search-filter > svg {
+    width: 16px;
+    height: 16px;
+    flex: 0 0 16px;
+  }
+
+  .customer-records-page .customer-search-filter input {
+    width: 100%;
+    min-width: 0;
+    height: 100%;
+    padding: 0;
+    font-size: 15px;
+    line-height: normal;
+  }
+
+  .customer-records-page .customers-filter-box select.customer-filter-select {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    height: 46px;
+    min-height: 46px;
+    box-sizing: border-box;
+    padding: 0 40px 0 14px;
+    line-height: normal;
+    text-align: left;
+    text-align-last: left;
+    appearance: none;
+    -webkit-appearance: none;
+    background-color: var(--dark-card);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23c9a84c' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    font-size: 15px;
+  }
+
+  .customer-records-page .customer-filter-clear {
+    justify-content: center;
+    min-height: 44px;
+  }
+
+  .customer-records-page .customer-table-wrapper {
+    min-width: 0;
+    overflow: hidden;
+    padding: 0;
+  }
+
+  .customer-records-page .customer-desktop-table {
+    display: none;
+  }
+
+  .customer-records-page .customer-mobile-cards {
+    display: grid;
+    gap: 11px;
+    min-width: 0;
+    padding: 12px;
+  }
+
+  .customer-mobile-card {
+    min-width: 0;
+    padding: 13px;
+    background: rgba(15, 23, 42, 0.72);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    border-radius: 14px;
+  }
+
+  .customer-mobile-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+  }
+
+  .customer-mobile-card-header > div,
+  .customer-mobile-fields > div {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+  }
+
+  .customer-mobile-card-header > div > span,
+  .customer-mobile-fields > div > span {
+    color: var(--text-secondary);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .customer-mobile-card-header > div > strong {
+    color: var(--gold);
+    font-size: 14px;
+    overflow-wrap: anywhere;
+  }
+
+  .customer-mobile-card-header > .status-badge {
+    flex: 0 0 auto;
+    max-width: 48%;
+    white-space: normal;
+    text-align: center;
+  }
+
+  .customer-mobile-fields {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px 12px;
+    padding: 11px 0;
+  }
+
+  .customer-mobile-fields > div:first-child {
+    grid-column: 1 / -1;
+  }
+
+  .customer-mobile-fields > div > strong {
+    color: var(--text-primary);
+    font-size: 13px;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+  }
+
+  .customer-mobile-actions {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 10px;
+    border-top: 1px solid rgba(212, 175, 55, 0.12);
+  }
+
+  .customer-records-page .customer-mobile-actions .icon-btn {
+    width: 36px;
+    height: 36px;
+    margin: 0;
+  }
+
+  .customer-mobile-empty {
+    padding: 24px 10px;
+    color: var(--text-secondary);
+    text-align: center;
+  }
+
+  .customer-records-page .customer-records-pagination {
+    width: 100%;
+    min-width: 0;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center !important;
+    gap: 6px !important;
+    padding: 10px 8px !important;
+    box-sizing: border-box;
+  }
+
+  .customer-records-page .customer-records-pagination > span {
+    max-width: 100%;
+    text-align: center;
+    font-size: 12px !important;
+    overflow-wrap: anywhere;
+  }
+
+  .customer-records-page .customer-records-pagination .pagination-control-buttons {
+    justify-content: center;
+    gap: 4px !important;
+    max-width: 100%;
+  }
+
+  .customer-records-page .customer-records-pagination .pagination-control-button {
+    width: 30px !important;
+    min-width: 30px !important;
+    height: 30px !important;
+    padding: 0 !important;
+    font-size: 12px !important;
+    flex: 0 0 30px;
+  }
+
+  .customer-profile-modal-overlay {
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    overflow: hidden;
+  }
+
+  .customer-profile-modal {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 100%;
+    height: 90vh;
+    height: min(90dvh, 760px);
+    max-height: calc(100vh - 16px);
+    max-height: calc(100dvh - 16px);
+    min-height: 0;
+    padding: 0;
+    overflow: hidden;
+    box-sizing: border-box;
+  }
+
+  .customer-profile-modal-header {
+    position: relative;
+    z-index: 1;
+    flex: 0 0 auto;
+    align-items: center;
+    margin: 0;
+    padding: 12px 14px;
+    background: #0f172a;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.14);
+  }
+
+  .customer-profile-modal-header h3 {
+    min-width: 0;
+    font-size: 17px;
+    line-height: 1.25;
+  }
+
+  .customer-profile-modal-header button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    min-width: 38px;
+    padding: 0;
+  }
+
+  .customer-profile-modal-content {
+    flex: 1 1 auto;
+    min-height: 0;
+    width: 100%;
+    padding: 14px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    box-sizing: border-box;
+  }
+
+  .customer-profile-modal-content .modal-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+
+  .customer-profile-modal-content .customer-profile-section {
+    width: 100%;
+    min-width: 0;
+    padding: 14px;
+  }
+
+  .customer-profile-modal-content .customer-profile-fields {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 11px;
+  }
+
+  .customer-profile-modal-content .customer-profile-field,
+  .customer-profile-modal-content .customer-profile-field strong {
+    min-width: 0;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  .customer-profile-modal-content .customer-profile-section:first-child .customer-profile-field:last-child {
+    grid-column: auto;
+  }
+
+  .customer-linked-loans {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .customer-linked-loan-cards {
+    display: grid;
+    gap: 10px;
+  }
+
+  .customer-linked-loan-card {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px 12px;
+    min-width: 0;
+    padding: 12px;
+    background: rgba(15, 23, 42, 0.72);
+    border: 1px solid rgba(212, 175, 55, 0.18);
+    border-radius: 10px;
+  }
+
+  .customer-linked-loan-card > div {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+  }
+
+  .customer-linked-loan-card > div:first-child {
+    grid-column: 1 / -1;
+  }
+
+  .customer-linked-loan-card span {
+    color: #a9b4c8;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .customer-linked-loan-card strong {
+    color: #f1f5f9;
+    font-size: 13px;
+    font-weight: 500;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  .customer-linked-loans .customer-loans-table-wrap {
+    display: none;
+  }
+}
+
+@media (max-width: 360px) {
+  .customer-linked-loan-card,
+  .customer-mobile-fields {
+    gap: 9px 8px;
+  }
+
+  .customer-records-page .customer-records-pagination .pagination-control-buttons {
+    gap: 3px !important;
+  }
+
+  .customer-records-page .customer-records-pagination .pagination-control-button {
+    width: 28px !important;
+    min-width: 28px !important;
+    flex-basis: 28px;
+  }
+}

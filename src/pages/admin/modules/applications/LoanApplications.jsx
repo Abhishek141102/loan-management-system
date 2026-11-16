@@ -12,6 +12,7 @@ import {
 } from "react-icons/fa";
 import API from "../../../../services/api";
 import PaginationControls from "../../../../components/PaginationControls";
+import "./LoanApplications.css";
 
 const STATUS_COLORS = {
   Draft: { bg: "rgba(100,100,100,0.18)", color: "#aaa" },
@@ -914,7 +915,7 @@ function LoanApplications({ globalSearch }) {
   }, [globalSearch]);
 
   return (
-    <div className="page-container">
+    <div className="page-container loan-applications-page">
       <Toast toast={toast} onClose={() => setToast(null)} />
 
       <div className="page-header">
@@ -928,6 +929,7 @@ function LoanApplications({ globalSearch }) {
         </div>
 
         <button
+          className="loan-app-add-button"
           onClick={() =>
             setModal({
               type: "add",
@@ -940,7 +942,7 @@ function LoanApplications({ globalSearch }) {
 
       {/* FILTERS */}
 
-      <div className="filter-box">
+      <div className="filter-box loan-app-filters">
         <input
           placeholder="Search applicant, PAN, loan ID..."
           value={search}
@@ -953,6 +955,7 @@ function LoanApplications({ globalSearch }) {
         />
 
         <select
+          className="loan-app-filter-select"
           value={filterStatus}
           onChange={(e) => {
             setPage(1);
@@ -975,6 +978,7 @@ function LoanApplications({ globalSearch }) {
         </select>
 
         <select
+          className="loan-app-filter-select"
           value={filterType}
           onChange={(e) => {
             setPage(1);
@@ -1027,8 +1031,61 @@ function LoanApplications({ globalSearch }) {
 
       {/* TABLE */}
 
-      <div className="table-wrapper table card">
-        <table className="admin-table">
+      <div className="table-wrapper table card loan-app-table-wrapper">
+        <div className="loan-app-mobile-cards">
+          {apps.length === 0 ? (
+            <p className="loan-app-mobile-empty">No applications found.</p>
+          ) : apps.map((app) => (
+            <article className="loan-app-mobile-card" key={`mobile-${app.dbId}`}>
+              <div className="loan-app-mobile-card-header">
+                <div className="loan-app-mobile-id">
+                  <span>Loan ID</span>
+                  <strong>{app.id || "—"}</strong>
+                </div>
+                <StatusBadge status={app.status} />
+              </div>
+
+              <div className="loan-app-mobile-applicant">
+                <span>Applicant Name</span>
+                <strong>{app.applicant || "—"}</strong>
+                <small><span>PAN</span> {app.pan || "—"}</small>
+              </div>
+
+              <div className="loan-app-mobile-details">
+                <div><span>Loan Type</span><strong>{app.loanType || "—"}</strong></div>
+                <div><span>Monthly Income</span><strong>{app.income || "—"}</strong></div>
+                <div><span>Loan Amount</span><strong>{app.amount || "—"}</strong></div>
+                <div><span>Tenure</span><strong>{app.tenure ? `${app.tenure} months` : "—"}</strong></div>
+                <div className="loan-app-mobile-date"><span>Application Date</span><strong>{app.applicationDate || "—"}</strong></div>
+              </div>
+
+              <div className="loan-app-mobile-actions" aria-label={`Actions for ${app.id}`}>
+                <button
+                  className="icon-btn view"
+                  title="View Application"
+                  aria-label="View Application"
+                  onClick={() => setModal({ type: "view", app })}
+                ><FaEye /></button>
+                <button
+                  className="icon-btn"
+                  title="Edit Application"
+                  aria-label="Edit Application"
+                  style={{ background: "var(--warning)" }}
+                  onClick={() => setModal({ type: "edit", app })}
+                ><FaEdit /></button>
+                <button
+                  className="icon-btn"
+                  title="Application Timeline"
+                  aria-label="Application Timeline"
+                  style={{ background: "rgba(156,39,176,0.7)" }}
+                  onClick={() => setModal({ type: "timeline", app })}
+                ><FaHistory /></button>
+              </div>
+            </article>
+          ))}
+        </div>
+
+        <table className="admin-table loan-app-desktop-table">
           <thead>
             <tr>
               <th>Loan ID</th>
@@ -1176,11 +1233,13 @@ function LoanApplications({ globalSearch }) {
         totalRecords={totalRecords}
         limit={limit}
         onPageChange={setPage}
+        className="loan-app-pagination"
       />
 
       {/* STATUS CARDS */}
 
       <div
+        className="loan-app-status-summary"
         style={{
           display: "flex",
           gap: 10,
@@ -1193,6 +1252,7 @@ function LoanApplications({ globalSearch }) {
 
           return (
             <div
+              className="loan-app-status-badge"
               key={s}
               onClick={() => {
                 setPage(1);

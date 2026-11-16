@@ -1,0 +1,258 @@
+.document-mobile-cards {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .document-verification-page {
+    min-width: 0;
+    overflow-x: hidden;
+  }
+
+  .document-verification-page .document-verification-filters {
+    gap: 10px;
+  }
+
+  .document-verification-page .document-verification-filter-select {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    height: 46px;
+    min-height: 46px;
+    box-sizing: border-box;
+    padding: 0 40px 0 14px;
+    line-height: normal;
+    text-align: left;
+    text-align-last: left;
+    appearance: none;
+    -webkit-appearance: none;
+    background-color: var(--dark-card);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23c9a84c' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    font-size: 16px;
+  }
+
+  .document-verification-page .document-bulk-actions {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px !important;
+    padding: 10px !important;
+  }
+
+  .document-verification-page .document-bulk-actions > span {
+    flex: 1 0 100%;
+    text-align: center;
+  }
+
+  .document-verification-page .document-bulk-actions > button {
+    justify-content: center;
+  }
+
+  .document-verification-page .document-verification-table-wrapper {
+    min-width: 0;
+    overflow: hidden;
+    padding: 0;
+  }
+
+  .document-verification-page .document-verification-desktop-table {
+    display: none;
+  }
+
+  .document-verification-page .document-mobile-cards {
+    display: grid;
+    gap: 11px;
+    min-width: 0;
+    padding: 12px;
+  }
+
+  .document-mobile-select-all {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 9px;
+    min-height: 34px;
+    padding: 0 4px;
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .document-mobile-select-all input,
+  .document-mobile-checkbox input {
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    flex: 0 0 18px;
+    accent-color: var(--gold);
+    cursor: pointer;
+  }
+
+  .document-mobile-card {
+    min-width: 0;
+    padding: 13px;
+    background: rgba(15, 23, 42, 0.72);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    border-radius: 14px;
+  }
+
+  .document-mobile-card-header {
+    display: grid;
+    grid-template-columns: 20px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 8px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.16);
+  }
+
+  .document-mobile-checkbox {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .document-mobile-loan-id,
+  .document-mobile-fields > div {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+  }
+
+  .document-mobile-loan-id > span,
+  .document-mobile-fields > div > span {
+    color: var(--text-secondary);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .document-mobile-loan-id > strong {
+    color: var(--gold);
+    font-size: 13px;
+    overflow-wrap: anywhere;
+  }
+
+  .document-mobile-card-header > span {
+    max-width: 120px;
+    padding: 5px 9px !important;
+    font-size: 11px !important;
+    text-align: center;
+    white-space: normal !important;
+  }
+
+  .document-mobile-fields {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px 12px;
+    padding: 11px 0;
+  }
+
+  .document-mobile-fields > div:first-child,
+  .document-mobile-fields > div:nth-child(3) {
+    grid-column: 1 / -1;
+  }
+
+  .document-mobile-fields > div > strong {
+    color: var(--text-primary);
+    font-size: 13px;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+  }
+
+  .document-mobile-fields .document-uploaded {
+    color: #81c784;
+  }
+
+  .document-mobile-fields .document-not-uploaded {
+    color: #ef5350;
+  }
+
+  .document-mobile-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(212, 175, 55, 0.12);
+  }
+
+  .document-verification-page .document-mobile-actions .icon-btn {
+    width: 36px;
+    height: 36px;
+    margin: 0;
+  }
+
+  .document-mobile-empty {
+    padding: 24px 10px;
+    color: var(--text-secondary);
+    text-align: center;
+  }
+
+  .document-verification-page .document-status-summary {
+    justify-content: center;
+    gap: 8px !important;
+    max-width: 100%;
+    padding: 0 2px;
+  }
+
+  .document-verification-page .document-status-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    max-width: 100%;
+    padding: 7px 10px !important;
+    text-align: center;
+    white-space: nowrap;
+    font-size: 11px !important;
+  }
+
+  .document-verification-page .document-verification-pagination {
+    width: 100%;
+    min-width: 0;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center !important;
+    gap: 6px !important;
+    padding: 10px 8px !important;
+    box-sizing: border-box;
+  }
+
+  .document-verification-page .document-verification-pagination > span {
+    max-width: 100%;
+    text-align: center;
+    font-size: 12px !important;
+    overflow-wrap: anywhere;
+  }
+
+  .document-verification-page .document-verification-pagination .pagination-control-buttons {
+    justify-content: center;
+    gap: 4px !important;
+    max-width: 100%;
+  }
+
+  .document-verification-page .document-verification-pagination .pagination-control-button {
+    width: 30px !important;
+    min-width: 30px !important;
+    height: 30px !important;
+    padding: 0 !important;
+    font-size: 12px !important;
+    flex: 0 0 30px;
+  }
+}
+
+@media (max-width: 360px) {
+  .document-mobile-fields {
+    gap: 9px 8px;
+  }
+
+  .document-verification-page .document-verification-pagination .pagination-control-buttons {
+    gap: 3px !important;
+  }
+
+  .document-verification-page .document-verification-pagination .pagination-control-button {
+    width: 28px !important;
+    min-width: 28px !important;
+    flex-basis: 28px;
+  }
+}

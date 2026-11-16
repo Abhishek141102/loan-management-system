@@ -338,6 +338,10 @@
   background: #1d4ed8;
 }
 
+.save-remark-icon {
+  display: none;
+}
+
 /* =========================
    SCROLLBAR
 ========================= */
@@ -415,5 +419,235 @@
 
   .checklist-card label {
     font-size: 14px;
+  }
+}
+
+.approval-mobile-cards {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .approval-queue-page {
+    min-width: 0;
+    overflow-x: hidden;
+  }
+
+  .approval-queue-page .approval-queue-table-wrapper {
+    min-width: 0;
+    overflow: hidden;
+    padding: 0;
+  }
+
+  .approval-queue-page .approval-desktop-table {
+    display: none;
+  }
+
+  .approval-queue-page .approval-mobile-cards {
+    display: grid;
+    gap: 12px;
+    min-width: 0;
+    padding: 12px;
+  }
+
+  .approval-mobile-card {
+    min-width: 0;
+    padding: 14px;
+    background: rgba(15, 23, 42, 0.72);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 14px;
+    cursor: pointer;
+    transition: border-color 0.2s ease, background 0.2s ease;
+  }
+
+  .approval-mobile-card.selected,
+  .approval-mobile-card:focus-visible {
+    border-color: rgba(96, 165, 250, 0.75);
+    background: rgba(37, 99, 235, 0.12);
+    outline: none;
+  }
+
+  .approval-mobile-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .approval-mobile-card-header > div,
+  .approval-mobile-fields > div {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+  }
+
+  .approval-mobile-card-header > div > span,
+  .approval-mobile-fields > div > span {
+    color: #94a3b8;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .approval-mobile-card-header > div > strong {
+    color: #93c5fd;
+    font-size: 14px;
+    overflow-wrap: anywhere;
+  }
+
+  .approval-mobile-status {
+    flex: 0 0 auto;
+    max-width: 45%;
+    padding: 5px 9px;
+    color: #bfdbfe;
+    background: rgba(59, 130, 246, 0.16);
+    border: 1px solid rgba(96, 165, 250, 0.25);
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    text-align: center;
+    overflow-wrap: anywhere;
+  }
+
+  .approval-mobile-fields {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px 12px;
+    padding: 11px 0;
+  }
+
+  .approval-mobile-fields > .approval-mobile-applicant {
+    grid-column: 1 / -1;
+  }
+
+  .approval-mobile-fields > div > strong {
+    color: #e2e8f0;
+    font-size: 13px;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+  }
+
+  .approval-mobile-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 7px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .approval-queue-page .approval-mobile-actions .icon-btn {
+    width: 34px;
+    height: 34px;
+    margin: 0;
+    flex: 0 0 34px;
+  }
+
+  .approval-mobile-empty {
+    padding: 24px 10px;
+    color: #cbd5e1;
+    text-align: center;
+  }
+
+  .approval-queue-page .approval-queue-pagination {
+    width: 100%;
+    min-width: 0;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center !important;
+    gap: 6px !important;
+    padding: 10px 8px !important;
+    box-sizing: border-box;
+  }
+
+  .approval-queue-page .approval-queue-pagination > span {
+    max-width: 100%;
+    text-align: center;
+    font-size: 12px !important;
+    overflow-wrap: anywhere;
+  }
+
+  .approval-queue-page .approval-queue-pagination .pagination-control-buttons {
+    justify-content: center;
+    gap: 4px !important;
+    max-width: 100%;
+  }
+
+  .approval-queue-page .approval-queue-pagination .pagination-control-button {
+    width: 30px !important;
+    min-width: 30px !important;
+    height: 30px !important;
+    padding: 0 !important;
+    font-size: 12px !important;
+    flex: 0 0 30px;
+  }
+
+  .approval-queue-page .approval-application-details {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+    margin-top: 18px;
+  }
+
+  .approval-queue-page .approval-application-details .split-card {
+    min-width: 0;
+    padding: 16px;
+  }
+
+  .approval-queue-page .approval-application-details .split-card p {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    overflow-wrap: anywhere;
+  }
+
+  .approval-queue-page .approval-application-details .split-card p strong {
+    flex: 0 0 auto;
+  }
+
+  .approval-queue-page .approval-internal-remarks {
+    min-width: 0;
+    padding: 16px;
+  }
+
+  .approval-queue-page .approval-internal-remarks .remarks-box {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .approval-queue-page .approval-internal-remarks .save-remark-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: min(88%, 420px);
+    min-height: 46px;
+    margin: 14px auto 0;
+    padding: 10px 16px;
+    text-align: center;
+    gap: 8px;
+  }
+
+  .approval-queue-page .approval-internal-remarks .save-remark-icon {
+    display: inline-block;
+  }
+}
+
+@media (max-width: 360px) {
+  .approval-queue-page .approval-queue-pagination .pagination-control-buttons {
+    gap: 3px !important;
+  }
+
+  .approval-queue-page .approval-queue-pagination .pagination-control-button {
+    width: 28px !important;
+    min-width: 28px !important;
+    flex-basis: 28px;
+  }
+
+  .approval-mobile-card {
+    padding: 12px;
   }
 }

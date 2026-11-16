@@ -1,0 +1,227 @@
+.loan-app-mobile-cards {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .loan-applications-page {
+    min-width: 0;
+    overflow-x: hidden;
+  }
+
+  .loan-applications-page .loan-app-add-button {
+    width: min(88%, 420px);
+    min-height: 46px;
+    margin: 0 auto;
+    justify-content: center;
+  }
+
+  .loan-applications-page .loan-app-filters {
+    gap: 10px;
+  }
+
+  .loan-applications-page .loan-app-filter-select {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    height: 46px;
+    min-height: 46px;
+    box-sizing: border-box;
+    padding: 0 40px 0 14px;
+    line-height: normal;
+    text-align: left;
+    text-align-last: left;
+    appearance: none;
+    -webkit-appearance: none;
+    background-color: var(--dark-card);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23c9a84c' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    font-size: 16px;
+  }
+
+  .loan-applications-page .loan-app-table-wrapper {
+    min-width: 0;
+    overflow: hidden;
+    padding: 0;
+  }
+
+  .loan-applications-page .loan-app-desktop-table {
+    display: none;
+  }
+
+  .loan-applications-page .loan-app-mobile-cards {
+    display: grid;
+    gap: 12px;
+    min-width: 0;
+    padding: 12px;
+  }
+
+  .loan-app-mobile-card {
+    min-width: 0;
+    padding: 13px;
+    background: rgba(15, 23, 42, 0.72);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    border-radius: 14px;
+  }
+
+  .loan-app-mobile-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.16);
+  }
+
+  .loan-app-mobile-id,
+  .loan-app-mobile-applicant,
+  .loan-app-mobile-details > div {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+  }
+
+  .loan-app-mobile-id > span,
+  .loan-app-mobile-applicant > span,
+  .loan-app-mobile-details > div > span,
+  .loan-app-mobile-applicant small > span {
+    color: var(--text-secondary);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .loan-app-mobile-id > strong {
+    color: var(--gold);
+    font-size: 14px;
+    overflow-wrap: anywhere;
+  }
+
+  .loan-app-mobile-card-header > .loan-app-status-badge {
+    white-space: nowrap;
+  }
+
+  .loan-app-mobile-applicant {
+    padding: 10px 0;
+  }
+
+  .loan-app-mobile-applicant > strong {
+    color: var(--text-primary);
+    font-size: 15px;
+    overflow-wrap: anywhere;
+  }
+
+  .loan-app-mobile-applicant small {
+    color: var(--text-secondary);
+    font-size: 12px;
+  }
+
+  .loan-app-mobile-details {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px 12px;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.035);
+    border-radius: 10px;
+  }
+
+  .loan-app-mobile-details > div > strong {
+    color: var(--text-primary);
+    font-size: 13px;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+  }
+
+  .loan-app-mobile-details > .loan-app-mobile-date {
+    grid-column: 1 / -1;
+  }
+
+  .loan-app-mobile-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 11px;
+  }
+
+  .loan-applications-page .loan-app-mobile-actions .icon-btn {
+    width: 36px;
+    height: 36px;
+    margin: 0;
+  }
+
+  .loan-app-mobile-empty {
+    padding: 24px 10px;
+    color: var(--text-secondary);
+    text-align: center;
+  }
+
+  .loan-applications-page .loan-app-pagination {
+    width: 100%;
+    min-width: 0;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 8px;
+    box-sizing: border-box;
+  }
+
+  .loan-applications-page .loan-app-pagination > span {
+    max-width: 100%;
+    text-align: center;
+    font-size: 12px !important;
+    overflow-wrap: anywhere;
+  }
+
+  .loan-applications-page .loan-app-pagination .pagination-control-buttons {
+    justify-content: center;
+    gap: 4px !important;
+    max-width: 100%;
+  }
+
+  .loan-applications-page .loan-app-pagination .pagination-control-button {
+    width: 30px !important;
+    min-width: 30px !important;
+    height: 30px !important;
+    padding: 0 !important;
+    font-size: 12px !important;
+    flex: 0 0 30px;
+  }
+
+  .loan-applications-page .loan-app-status-summary {
+    justify-content: center;
+    gap: 8px !important;
+    max-width: 100%;
+    padding: 0 2px;
+  }
+
+  .loan-applications-page .loan-app-status-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    max-width: 100%;
+    padding: 7px 10px !important;
+    white-space: nowrap;
+    text-align: center;
+    font-size: 11px !important;
+  }
+}
+
+@media (max-width: 360px) {
+  .loan-app-mobile-details {
+    gap: 9px 8px;
+  }
+
+  .loan-applications-page .loan-app-pagination .pagination-control-buttons {
+    gap: 3px !important;
+  }
+
+  .loan-applications-page .loan-app-pagination .pagination-control-button {
+    width: 28px !important;
+    min-width: 28px !important;
+    flex-basis: 28px;
+  }
+}

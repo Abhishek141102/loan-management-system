@@ -16,6 +16,7 @@ import {
   FaEnvelope,
 } from "react-icons/fa";
 import PaginationControls from "../../../../components/PaginationControls";
+import "./DocumentList.css";
 
 const RECORDS_PER_PAGE = 10;
 
@@ -755,7 +756,7 @@ link.href = `${API_BASE}/documents/${doc.id}/download`;
     );
 
   return (
-    <div className="page-container">
+    <div className="page-container document-verification-page">
       <Toast toast={toast} onClose={() => setToast(null)} />
 
       <div className="page-header">
@@ -790,7 +791,7 @@ link.href = `${API_BASE}/documents/${doc.id}/download`;
         </div>
       </div>
 
-      <div className="filter-box">
+      <div className="filter-box document-verification-filters">
         <input
           placeholder="Search loan ID, customer, document..."
           value={search}
@@ -798,6 +799,7 @@ link.href = `${API_BASE}/documents/${doc.id}/download`;
           style={{ flex: 2 }}
         />
         <select
+          className="document-verification-filter-select"
           value={filterType}
           onChange={(e) => setFilterType(e.target.value)}
         >
@@ -807,6 +809,7 @@ link.href = `${API_BASE}/documents/${doc.id}/download`;
           ))}
         </select>
         <select
+          className="document-verification-filter-select"
           value={filterStatus}
           onChange={(e) => setFilterStatus(e.target.value)}
         >
@@ -848,6 +851,7 @@ link.href = `${API_BASE}/documents/${doc.id}/download`;
 
       {selected.length > 0 && (
         <div
+          className="document-bulk-actions"
           style={{
             display: "flex",
             alignItems: "center",
@@ -894,8 +898,93 @@ link.href = `${API_BASE}/documents/${doc.id}/download`;
         </div>
       )}
 
-      <div className="table-wrapper table card">
-        <table className="admin-table">
+      <div className="table-wrapper table card document-verification-table-wrapper">
+        <div className="document-mobile-cards">
+          <label className="document-mobile-select-all">
+            <input
+              type="checkbox"
+              checked={selected.length === docs.length && docs.length > 0}
+              onChange={toggleAll}
+              aria-label="Select all documents on this page"
+            />
+            <span>Select all documents on this page</span>
+          </label>
+
+          {docs.length === 0 ? (
+            <p className="document-mobile-empty">No documents found.</p>
+          ) : docs.map((doc) => (
+            <article className="document-mobile-card" key={`mobile-${doc.id}`}>
+              <div className="document-mobile-card-header">
+                <label className="document-mobile-checkbox">
+                  <input
+                    type="checkbox"
+                    checked={selected.includes(doc.id)}
+                    onChange={() => toggleSelect(doc.id)}
+                    aria-label={`Select document ${doc.document} for loan ${doc.loanId}`}
+                  />
+                </label>
+                <div className="document-mobile-loan-id">
+                  <span>Loan ID</span>
+                  <strong>{doc.loanId || "—"}</strong>
+                </div>
+                <StatusBadge status={doc.status} />
+              </div>
+
+              <div className="document-mobile-fields">
+                <div><span>Customer Name</span><strong>{doc.customer || "—"}</strong></div>
+                <div><span>Loan Type</span><strong>{doc.loanType || "—"}</strong></div>
+                <div><span>Document</span><strong>{doc.document || "—"}</strong></div>
+                <div><span>Document Type</span><strong>{doc.type || "—"}</strong></div>
+                <div>
+                  <span>Uploaded</span>
+                  <strong className={doc.uploaded === "Yes" ? "document-uploaded" : "document-not-uploaded"}>
+                    {doc.uploaded === "Yes" ? (doc.fileType === "pdf" ? "PDF" : "Image") : "Not Uploaded"}
+                  </strong>
+                </div>
+              </div>
+
+              <div className="document-mobile-actions" aria-label={`Actions for ${doc.document}`}>
+                {doc.uploaded === "Yes" ? (
+                  <button
+                    className="icon-btn view"
+                    title="Download Document"
+                    aria-label="Download Document"
+                    onClick={() => handleDownload(doc)}
+                    style={{ background: "rgba(33,150,243,0.7)" }}
+                  ><FaDownload /></button>
+                ) : (
+                  <button
+                    className="icon-btn view"
+                    title="No file uploaded"
+                    aria-label="No file uploaded"
+                    disabled
+                    style={{ background: "rgba(100,100,100,0.3)", cursor: "not-allowed", opacity: 0.5 }}
+                  ><FaDownload /></button>
+                )}
+                {doc.uploaded === "Yes" && doc.status !== "Verified" && (
+                  <button
+                    className="icon-btn"
+                    title="Verify Document"
+                    aria-label="Verify Document"
+                    onClick={() => setModal({ type: "verify", doc })}
+                    style={{ background: "rgba(76,175,80,0.7)" }}
+                  ><FaCheck /></button>
+                )}
+                {doc.uploaded === "Yes" && doc.status !== "Rejected" && (
+                  <button
+                    className="icon-btn"
+                    title="Reject Document"
+                    aria-label="Reject Document"
+                    onClick={() => setModal({ type: "reject", doc })}
+                    style={{ background: "rgba(244,67,54,0.7)" }}
+                  ><FaTimes /></button>
+                )}
+              </div>
+            </article>
+          ))}
+        </div>
+
+        <table className="admin-table document-verification-desktop-table">
           <thead>
             <tr>
               <th>
@@ -1045,12 +1134,14 @@ link.href = `${API_BASE}/documents/${doc.id}/download`;
 
       {/* ─── Status summary pills (global counts from backend) ─── */}
       <div
+        className="document-status-summary"
         style={{ display: "flex", gap: 10, marginTop: 16, flexWrap: "wrap" }}
       >
         {Object.entries(STATUS_COLORS).map(([s, col]) => {
           const count = statusCounts[s] ?? 0;
           return (
             <div
+              className="document-status-badge"
               key={s}
               onClick={() => setFilterStatus(filterStatus === s ? "" : s)}
               style={{
@@ -1079,6 +1170,7 @@ link.href = `${API_BASE}/documents/${doc.id}/download`;
         totalRecords={totalRecords}
         limit={RECORDS_PER_PAGE}
         onPageChange={(page) => setCurrentPage(page)}
+        className="document-verification-pagination"
       />
 
       {modal?.type === "verify" && (

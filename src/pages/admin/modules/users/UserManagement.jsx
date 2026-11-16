@@ -238,7 +238,40 @@ export default function UserManagement() {
 
       {/* Users Table */}
       {loading ? <p>Loading users...</p> : (
-        <div style={{ overflowX: "auto" }}>
+        <>
+        <div className="user-mobile-cards">
+          {users.map((u) => {
+            const accessible = getAccessibleModules(u.role);
+            const isSelf = u.email === currentUser?.email;
+            return (
+              <article className={`user-mobile-card${isSelf ? " current-user-row" : ""}`} key={`mobile-${u.id}`}>
+                <div className="user-mobile-card-header">
+                  <div><span>User ID</span><strong>{u.id}</strong></div>
+                  <span className={`user-mobile-status ${u.status === "Active" ? "active" : "inactive"}`}>{u.status}</span>
+                </div>
+                <div className="user-mobile-fields">
+                  <div><span>Name</span><strong>{u.name}{isSelf && <span className="user-self-badge">YOU</span>}</strong></div>
+                  <div><span>Email</span><strong className="user-mobile-email">{u.email}</strong></div>
+                  <div className="user-mobile-role-field">
+                    <span>Role &amp; Access</span>
+                    <div>{roleBadge(u.role, () => openPermView(u.role))}</div>
+                    <small>
+                      {accessible.slice(0, 3).map((module) => MODULE_LABELS[module.mod]).join(", ")}
+                      {accessible.length > 3 && ` +${accessible.length - 3} more`}
+                    </small>
+                  </div>
+                  <div><span>Created</span><strong>{new Date(u.created_at).toLocaleDateString("en-IN")}</strong></div>
+                </div>
+                <div className="user-mobile-actions">
+                  <button className="user-edit-btn" onClick={() => openEdit(u)}>Edit</button>
+                  <button className="user-delete-btn" onClick={() => handleDelete(u.id, u.name)}>Delete</button>
+                </div>
+              </article>
+            );
+          })}
+        </div>
+
+        <div className="user-table-wrapper" style={{ overflowX: "auto" }}>
           <table className="user-management-table" style={{ width: "100%", borderCollapse: "collapse", fontSize: "14px" }}>
             <thead>
               <tr className="user-table-heading" style={{ background: "#f8fafc" }}>
@@ -282,13 +315,14 @@ export default function UserManagement() {
             </tbody>
           </table>
         </div>
+        </>
       )}
 
       {/* ===== PERMISSIONS VIEW MODAL ===== */}
       {showPermModal && permViewRole && (
-        <div className="user-modal-overlay" style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.6)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000 }}>
+        <div className="user-modal-overlay permissions-overlay" style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.6)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000 }}>
           <div className="user-modal permissions-modal" style={{ background: "#fff", borderRadius: "14px", padding: "28px", width: "640px", maxWidth: "95vw", maxHeight: "85vh", overflow: "auto", boxShadow: "0 24px 80px rgba(0,0,0,0.25)" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
+            <div className="permissions-modal-header" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
               <div>
                 <h2 style={{ margin: 0, fontSize: "18px" }}>
                   {permViewRole === "superadmin" ? "👑" : permViewRole === "admin" ? "🛡️" : permViewRole === "manager" ? "📋" : "🔍"} {permViewRole.charAt(0).toUpperCase() + permViewRole.slice(1)} Permissions
@@ -298,7 +332,8 @@ export default function UserManagement() {
               <button onClick={() => setShowPermModal(false)} style={{ background: "none", border: "none", fontSize: "20px", cursor: "pointer", color: "#888" }}>✕</button>
             </div>
 
-            <div style={{ overflowX: "auto" }}>
+            <div className="permissions-modal-content">
+            <div className="permissions-table-wrap" style={{ overflowX: "auto" }}>
               <table className="permissions-table" style={{ width: "100%", borderCollapse: "collapse", fontSize: "13px" }}>
                 <thead>
                   <tr className="user-table-heading" style={{ background: "#f8fafc" }}>
@@ -328,6 +363,8 @@ export default function UserManagement() {
               </table>
             </div>
 
+            </div>
+
             <div className="permission-note" style={{ marginTop: "16px", padding: "10px 14px", background: "#f0fdf4", borderRadius: "8px", fontSize: "12px", color: "#065f46" }}>
               💡 To change these permissions, update in <strong>Role Management</strong> or the <strong>backend role_permissions table.</strong>
             </div>
@@ -337,7 +374,7 @@ export default function UserManagement() {
 
       {/* ===== ADD / EDIT USER MODAL ===== */}
       {showModal && (
-        <div className="user-modal-overlay" style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 999 }}>
+        <div className="user-modal-overlay user-form-overlay" style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 999 }}>
           <div className="user-modal user-form-modal" style={{ background: "#fff", borderRadius: "12px", padding: "28px", width: "520px", maxWidth: "95vw", maxHeight: "90vh", overflow: "auto", boxShadow: "0 20px 60px rgba(0,0,0,0.2)" }}>
             <h2 style={{ margin: "0 0 20px", fontSize: "18px" }}>{editUser ? "✏️ Edit User" : "➕ New User"}</h2>
 
@@ -426,7 +463,7 @@ export default function UserManagement() {
               </div>
             )}
 
-            <div style={{ display: "flex", gap: "12px", justifyContent: "flex-end" }}>
+            <div className="user-form-actions" style={{ display: "flex", gap: "12px", justifyContent: "flex-end" }}>
               <button className="user-cancel-btn" onClick={() => setShowModal(false)} style={{ padding: "10px 20px", border: "1px solid #d1d5db", borderRadius: "8px", cursor: "pointer", background: "#fff" }}>Cancel</button>
               <button className="user-primary-btn" onClick={handleSave} style={{ padding: "10px 20px", background: "#2563eb", color: "#fff", border: "none", borderRadius: "8px", cursor: "pointer", fontWeight: "600" }}>
                 {editUser ? "Update" : "Create"}

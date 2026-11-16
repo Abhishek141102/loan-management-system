@@ -17,6 +17,8 @@ function PaginationControls({
 
   onPageChange,
 
+  className = "",
+
 }) {
 
   if (totalRecords === 0)
@@ -99,6 +101,7 @@ function PaginationControls({
 
   return (
     <div
+      className={`pagination-controls ${className}`.trim()}
       style={{
         display: "flex",
         alignItems: "center",
@@ -128,6 +131,7 @@ function PaginationControls({
       </span>
 
       <div
+        className="pagination-control-buttons"
         style={{
           display: "flex",
           alignItems: "center",
@@ -136,6 +140,7 @@ function PaginationControls({
       >
         {/* FIRST */}
         <button
+          className="pagination-control-button pagination-first"
           onClick={() =>
             onPageChange(1)
           }
@@ -153,6 +158,7 @@ function PaginationControls({
 
         {/* PREV */}
         <button
+          className="pagination-control-button pagination-previous"
           onClick={() =>
             onPageChange(
               page - 1
@@ -174,6 +180,7 @@ function PaginationControls({
         {getPageNumbers().map(
           (p) => (
             <button
+              className={`pagination-control-button pagination-page-number${p === page ? " active" : ""}`}
               key={p}
               onClick={() =>
                 onPageChange(
@@ -193,6 +200,7 @@ function PaginationControls({
 
         {/* NEXT */}
         <button
+          className="pagination-control-button pagination-next"
           onClick={() =>
             onPageChange(
               page + 1
@@ -214,6 +222,7 @@ function PaginationControls({
 
         {/* LAST */}
         <button
+          className="pagination-control-button pagination-last"
           onClick={() =>
             onPageChange(
               totalPages

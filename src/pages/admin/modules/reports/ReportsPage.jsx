@@ -45,6 +45,7 @@ function buildReportParams(filters, page = 1, limit = REPORTS_PER_PAGE) {
 }
 
 function ReportsPage() {
+  const [isMobile, setIsMobile] = useState(() => window.matchMedia("(max-width: 600px)").matches);
   const [reportRows, setReportRows] = useState([]);
   const [totalRecords, setTotalRecords] = useState(0);
   const [page, setPage] = useState(1);
@@ -60,6 +61,13 @@ function ReportsPage() {
     fromDate: "",
     toDate: "",
   });
+
+  useEffect(() => {
+    const mobileQuery = window.matchMedia("(max-width: 600px)");
+    const updateViewport = (event) => setIsMobile(event.matches);
+    mobileQuery.addEventListener("change", updateViewport);
+    return () => mobileQuery.removeEventListener("change", updateViewport);
+  }, []);
 
   // Fetch table data from backend with filters
   const fetchReportData = async () => {
@@ -379,19 +387,25 @@ function ReportsPage() {
       legend: {
         labels: {
           color: "#dbe4ff",
-          font: { size: 13, weight: "600" },
+          font: { size: isMobile ? 10 : 13, weight: "600" },
           usePointStyle: true,
           pointStyle: "circle",
+          padding: isMobile ? 8 : 10,
+          boxWidth: isMobile ? 10 : 40,
         },
       },
     },
     scales: {
       x: {
-        ticks: { color: "#8a99b5" },
+        ticks: {
+          color: "#8a99b5",
+          font: { size: isMobile ? 10 : 12 },
+          ...(isMobile ? { maxRotation: 0, minRotation: 0, autoSkip: true, maxTicksLimit: 6, padding: 4 } : {}),
+        },
         grid: { color: "rgba(255,255,255,0.06)" },
       },
       y: {
-        ticks: { color: "#8a99b5" },
+        ticks: { color: "#8a99b5", font: { size: isMobile ? 10 : 12 }, padding: isMobile ? 4 : 3 },
         grid: { color: "rgba(255,255,255,0.06)" },
       },
     },
@@ -407,9 +421,10 @@ function ReportsPage() {
         labels: {
           color: "#dbe4ff",
           padding: 18,
-          font: { size: 13, weight: "600" },
+          font: { size: isMobile ? 10 : 13, weight: "600" },
           usePointStyle: true,
           pointStyle: "circle",
+          boxWidth: isMobile ? 10 : 40,
         },
       },
       tooltip: {
@@ -434,7 +449,7 @@ function ReportsPage() {
             Track enquiries, applications, documents, approvals and loan status.
           </p>
         </div>
-        <div className="report-actions">
+      <div className="report-actions">
           <button onClick={exportExcel}>Export Excel</button>
           <button onClick={exportPDF}>Export PDF</button>
           <button onClick={exportCSV}>Export CSV</button>
@@ -561,8 +576,32 @@ function ReportsPage() {
           <span>{totalRecords} Records Found</span>
         </div>
 
+        <div className="report-mobile-cards">
+          {reportLoading ? (
+            <p className="report-mobile-empty">Loading report records...</p>
+          ) : reportRows.length > 0 ? (
+            reportRows.map((row, index) => (
+              <article className="report-mobile-card" key={`mobile-${row.loan_id}-${index}`}>
+                <div className="report-mobile-card-header">
+                  <span>Loan ID</span>
+                  <strong>{row.loan_id || "—"}</strong>
+                </div>
+                <div className="report-mobile-fields">
+                  <div><span>Applicant</span><strong>{row.name || "—"}</strong></div>
+                  <div><span>Loan Type</span><strong>{row.loan_type || "—"}</strong></div>
+                  <div><span>Amount</span><strong>₹{Number(row.amount).toLocaleString("en-IN")}</strong></div>
+                  <div><span>Date</span><strong>{row.date || "—"}</strong></div>
+                  <div className="report-mobile-remarks"><span>Remarks</span><strong>{row.remarks || "—"}</strong></div>
+                </div>
+              </article>
+            ))
+          ) : (
+            <p className="report-mobile-empty">No report data found.</p>
+          )}
+        </div>
+
         <div className="table-responsive">
-          <table>
+          <table className="report-desktop-table">
             <thead>
               <tr>
                 <th>Loan ID</th>
@@ -606,6 +645,7 @@ function ReportsPage() {
           totalRecords={totalRecords}
           limit={REPORTS_PER_PAGE}
           onPageChange={setPage}
+          className="reports-pagination"
         />
       </div>
     </div>

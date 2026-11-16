@@ -201,7 +201,7 @@ const response = await fetch(
   };
 
   return (
-    <div className="page-container">
+    <div className="page-container customer-records-page">
       <div className="page-header">
         <div>
           <h2>Customer Records</h2>
@@ -231,7 +231,7 @@ const response = await fetch(
 
       {/* FILTERS */}
 
-      <div className="filter-box">
+      <div className="filter-box customers-filter-box">
         <div className="customer-search-filter">
           <FaSearch />
           <input
@@ -245,6 +245,7 @@ const response = await fetch(
         </div>
 
         <select
+          className="customer-filter-select"
           value={statusFilter}
           onChange={(e) => {
             setPage(1);
@@ -264,6 +265,7 @@ const response = await fetch(
         </select>
 
         <select
+          className="customer-filter-select"
           value={loanTypeFilter}
           onChange={(e) => {
             setPage(1);
@@ -301,8 +303,40 @@ const response = await fetch(
 
       {/* TABLE */}
 
-      <div className="table-wrapper table card">
-        <table className="admin-table">
+      <div className="table-wrapper table card customer-table-wrapper">
+        <div className="customer-mobile-cards">
+          {loading ? (
+            <p className="customer-mobile-empty">Loading customers...</p>
+          ) : customers.length === 0 ? (
+            <p className="customer-mobile-empty">No customers found.</p>
+          ) : customers.map((customer, index) => (
+            <article className="customer-mobile-card" key={`mobile-${customer.id}-${index}`}>
+              <div className="customer-mobile-card-header">
+                <div><span>Customer ID</span><strong>{customer.id}</strong></div>
+                <span className={`status-badge ${customer.status.toLowerCase()}`}>{customer.status}</span>
+              </div>
+              <div className="customer-mobile-fields">
+                <div><span>Customer Name</span><strong>{customer.name}</strong></div>
+                <div><span>Mobile Number</span><strong>{customer.mobile}</strong></div>
+                <div><span>Loan Type</span><strong>{customer.loanType}</strong></div>
+                <div><span>Approved Amount</span><strong>{customer.approvedAmount}</strong></div>
+                <div><span>EMI</span><strong>{customer.emi}</strong></div>
+              </div>
+              <div className="customer-mobile-actions">
+                <button
+                  className="icon-btn view"
+                  title="View customer profile"
+                  aria-label={`View profile for ${customer.name}`}
+                  onClick={() => setSelectedCustomer(customer)}
+                >
+                  <FaIdCard />
+                </button>
+              </div>
+            </article>
+          ))}
+        </div>
+
+        <table className="admin-table customer-desktop-table">
           <thead>
             <tr>
               <th>Customer ID</th>
@@ -379,14 +413,15 @@ const response = await fetch(
         totalRecords={totalRecords}
         limit={limit}
         onPageChange={setPage}
+        className="customer-records-pagination"
       />
 
       {/* MODAL */}
 
       {selectedCustomer && (
-        <div className="customer-modal-overlay">
-          <div className="customer-modal">
-            <div className="modal-header">
+        <div className="customer-modal-overlay customer-profile-modal-overlay">
+          <div className="customer-modal customer-profile-modal">
+            <div className="modal-header customer-profile-modal-header">
               <h3>Customer Full Profile</h3>
 
               <button onClick={() => setSelectedCustomer(null)}>
@@ -394,6 +429,7 @@ const response = await fetch(
               </button>
             </div>
 
+            <div className="customer-profile-modal-content">
             <div className="modal-grid">
               <section className="customer-profile-section">
                 <h4>Personal Details</h4>
@@ -417,8 +453,18 @@ const response = await fetch(
               </section>
             </div>
 
-            <section className="customer-loans-section">
+            <section className="customer-loans-section customer-linked-loans">
               <h4>Linked Loans</h4>
+              <div className="customer-linked-loan-cards">
+                {selectedCustomer.loans.map((loan, i) => (
+                  <article className="customer-linked-loan-card" key={`mobile-${loan.loanId}-${i}`}>
+                    <div><span>Loan ID</span><strong>{loan.loanId || "—"}</strong></div>
+                    <div><span>Loan Type</span><strong>{loan.type || "—"}</strong></div>
+                    <div><span>Amount</span><strong>{loan.amount || "—"}</strong></div>
+                    <div><span>Status</span><strong>{loan.status || "—"}</strong></div>
+                  </article>
+                ))}
+              </div>
               <div className="customer-loans-table-wrap">
                 <table className="admin-table">
                   <thead>
@@ -442,6 +488,7 @@ const response = await fetch(
                 </table>
               </div>
             </section>
+            </div>
           </div>
         </div>
       )}
